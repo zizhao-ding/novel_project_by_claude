@@ -431,3 +431,192 @@ git push
 git branch -d feature/add-database
 git push origin --delete feature/add-database
 ```
+
+---
+
+# 问题 3：分支重命名
+
+**日期**: 2026-06-11  
+**状态**: ✅ 已完成
+
+---
+
+## 需求描述
+
+将已推送的功能分支 `feature_01` 重命名为 `feature_1.0.0.1`，更符合版本号管理规范。
+
+---
+
+## 解决过程
+
+### 步骤 1：重命名本地分支
+
+```bash
+git branch -m feature_01 feature_1.0.0.1
+```
+
+**说明**: 
+- `branch -m` 用于重命名分支
+- `feature_01` 是源分支名称
+- `feature_1.0.0.1` 是目标分支名称
+
+### 步骤 2：删除远程旧分支
+
+```bash
+git push origin --delete feature_01
+```
+
+**输出**:
+```
+To https://github.com/zizhao-ding/novel_project_by_claude.git
+ - [deleted]         feature_01
+```
+
+**说明**: 删除远程仓库中的旧分支，避免混淆
+
+### 步骤 3：推送新分支到远程
+
+```bash
+git push -u origin feature_1.0.0.1
+```
+
+**输出**:
+```
+Enumerating objects: 15, done.
+Counting objects: 100% (15/15), done.
+Delta compression using up to 8 threads
+Compressing objects: (11/11), done.
+Writing objects: 15/15), 6.23 KiB | 6.23 MiB/s, done.
+Total 15 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed.
+remote: 
+remote: Create a pull request for 'feature_1.0.0.1' on GitHub by visiting:
+remote:      https://github.com/zizhao-ding/novel_project_by_claude/pull/new/feature_1.0.0.1
+remote: 
+To https://github.com/zizhao-ding/novel_project_by_claude.git
+ * [new branch]      feature_1.0.0.1 -> feature_1.0.0.1
+branch 'feature_1.0.0.1' set up to track 'origin/feature_1.0.0.1'.
+```
+
+**说明**: 
+- `-u` 参数建立本地分支与远程分支的追踪关系
+- GitHub 自动提示可以创建 Pull Request
+
+### 步骤 4：验证分支状态
+
+```bash
+git branch -a
+```
+
+**输出**:
+```
+* feature_1.0.0.1              ← 当前分支（已重命名）
+  main                         ← 主分支
+  remotes/origin/feature_1.0.0.1  ← 远程新分支
+  remotes/origin/main          ← 远程主分支
+```
+
+---
+
+## 最终结果
+
+✅ **分支重命名完成**
+
+- 本地分支已从 `feature_01` 重命名为 `feature_1.0.0.1`
+- 远程旧分支 `origin/feature_01` 已删除
+- 新分支 `origin/feature_1.0.0.1` 已推送到 GitHub
+- 本地分支与远程分支追踪关系已建立
+
+---
+
+## 分支重命名的完整流程
+
+### 场景 1：重命名未推送的本地分支
+
+```bash
+git branch -m 旧分支名 新分支名
+# 无需进一步操作
+```
+
+### 场景 2：重命名已推送的远程分支（推荐做法）
+
+```bash
+# 1. 重命名本地分支
+git branch -m 旧分支名 新分支名
+
+# 2. 删除远程旧分支
+git push origin --delete 旧分支名
+
+# 3. 推送新分支
+git push -u origin 新分支名
+
+# 4. 更新本地引用（可选）
+git fetch origin
+```
+
+### 场景 3：如果当前在要重命名的分支上
+
+```bash
+# 可以直接使用 -m 参数重命名
+git branch -m 新分支名
+
+# 然后删除远程旧分支
+git push origin --delete 旧分支名
+
+# 推送新分支
+git push -u origin 新分支名
+```
+
+---
+
+## 最佳实践建议
+
+### 1. 分支命名规范优化
+
+**建议使用**:
+- `feature/1.0.0.1-user-auth` - 版本号 + 功能描述
+- `bugfix/1.0.0.1-login-issue` - 版本号 + 问题描述
+- `release/1.0.0` - 发布分支
+
+**不推荐**:
+- ❌ 仅用版本号：`1.0.0.1`（不清楚是什么功能）
+- ❌ 仅用功能：`user-auth`（无版本跟踪）
+
+### 2. 重命名前的检查清单
+
+```bash
+# 1. 确认当前分支状态
+git status
+
+# 2. 确认分支内容已提交或备份
+git log --oneline -5
+
+# 3. 确认无未提交的更改
+git diff-index --quiet HEAD -- || echo "有未提交的更改"
+
+# 4. 如果有其他人协作，通知他们即将重命名
+```
+
+### 3. 协作场景下的注意事项
+
+如果多人协作，其他开发者需要执行以下操作来适配分支重命名：
+
+```bash
+# 其他开发者的操作
+git fetch origin                           # 获取最新的分支列表
+git branch -D feature_01                   # 删除本地旧分支
+git checkout --track origin/feature_1.0.0.1  # 切换到新分支
+```
+
+---
+
+## 相关命令速查
+
+| 命令 | 说明 |
+|------|------|
+| `git branch -m <旧名> <新名>` | 重命名本地分支 |
+| `git branch -m <新名>` | 重命名当前分支 |
+| `git push origin --delete <分支名>` | 删除远程分支 |
+| `git push -u origin <分支名>` | 推送分支并设置追踪 |
+| `git branch -D <分支名>` | 强制删除本地分支 |
+| `git fetch origin` | 更新本地对远程分支的认知 |
