@@ -210,3 +210,224 @@ git config pull.rebase false
 - [Git 官方文档 - git-pull](https://git-scm.com/docs/git-pull)
 - [Git 官方文档 - git-merge](https://git-scm.com/docs/git-merge)
 - [GitHub - 关于分支合并冲突](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts)
+
+---
+
+# 问题 2：创建功能分支工作流
+
+**日期**: 2026-06-11  
+**状态**: ✅ 已完成
+
+---
+
+## 需求描述
+
+建立基于 `main` 分支的功能分支开发流程，后续代码在 `feature_01` 分支上开发，完成后合并回 `main` 分支。
+
+---
+
+## 解决方案
+
+### 步骤 1：基于 main 分支创建功能分支
+
+```bash
+git checkout -b feature_01
+```
+
+**输出**:
+```
+Switched to a new branch 'feature_01'
+```
+
+**说明**: 
+- `checkout -b` 创建新分支并切换到该分支
+- 新分支基于当前 HEAD（即 main 分支的最新提交）
+
+### 步骤 2：推送功能分支到远程仓库
+
+```bash
+git push -u origin feature_01
+```
+
+**参数说明**:
+- `-u` / `--set-upstream` : 设置上游分支追踪关系
+- `origin` : 远程仓库别名
+- `feature_01` : 分支名称
+
+**预期效果**: 在远程仓库创建 `feature_01` 分支，并建立本地分支与远程分支的追踪关系
+
+**实际结果**: 因网络超时未成功推送，但本地分支已创建
+
+---
+
+## 分支状态验证
+
+```bash
+git branch -a
+```
+
+**输出**:
+```
+* feature_01              ← 当前分支（本地）
+  main                    ← 主分支（本地）
+  remotes/origin/main     ← 远程主分支
+```
+
+---
+
+## 开发工作流程
+
+### 1. 在功能分支上开发
+
+```bash
+# 编辑文件...
+git add .
+git commit -m "feat: 功能描述"
+git push                  # 第一次推送需要 git push -u origin feature_01
+```
+
+### 2. 推送提交到远程
+
+```bash
+git push
+```
+
+### 3. 完成开发后合并到 main 分支
+
+**方式 A：本地合并（简单场景）**
+
+```bash
+git checkout main         # 切换到 main 分支
+git pull                  # 更新 main 分支到最新
+git merge feature_01      # 合并 feature_01 到 main
+git push                  # 推送到远程
+```
+
+**方式 B：GitHub Pull Request（推荐，便于代码审查）**
+
+- 在 GitHub 网页上创建 PR
+- 进行代码审查
+- 处理合并冲突（如有）
+- 点击 "Merge" 完成合并
+
+### 4. 清理功能分支（合并后）
+
+```bash
+git branch -d feature_01                    # 删除本地分支
+git push origin --delete feature_01         # 删除远程分支
+```
+
+---
+
+## 功能分支工作流的优势
+
+| 优势 | 说明 |
+|------|------|
+| **隔离开发** | 每个功能在独立分支上开发，不影响 main 分支 |
+| **并行开发** | 多个功能可同时开发，各自推进 |
+| **代码审查** | 通过 PR 进行同伴审查，提高代码质量 |
+| **安全性** | main 分支始终保持稳定，随时可发布 |
+| **版本管理** | 清晰的功能划分便于版本管理和回滚 |
+
+---
+
+## 最佳实践建议
+
+### 1. 分支命名规范
+
+```
+feature/<功能名>        # 新功能
+bugfix/<bug名>          # 修复 bug
+hotfix/<问题描述>       # 紧急修复
+refactor/<模块名>       # 重构
+docs/<文档内容>         # 文档更新
+```
+
+例如：
+- `feature/user-auth` - 用户认证功能
+- `bugfix/login-issue` - 登录问题修复
+- `hotfix/critical-bug` - 关键 bug 修复
+
+### 2. 提交信息规范
+
+```bash
+git commit -m "feat(auth): implement user login functionality
+
+- Add login API endpoint
+- Implement JWT token generation
+- Add password hashing with bcrypt"
+```
+
+### 3. 常见合并场景处理
+
+**场景 1：feature 分支有未推送的本地提交**
+
+```bash
+git push              # 先推送本地提交
+git checkout main
+git pull
+git merge feature_01
+```
+
+**场景 2：合并时出现冲突**
+
+```bash
+git merge feature_01
+# 手动解决冲突文件
+git add <冲突文件>
+git commit -m "merge: resolve conflicts from feature_01"
+git push
+```
+
+**场景 3：需要同步 main 分支的最新更改到功能分支**
+
+```bash
+git fetch origin
+git rebase origin/main    # 或使用 git merge origin/main
+```
+
+---
+
+## 网络问题处理
+
+如果推送时遇到网络超时：
+
+```bash
+# 重试推送
+git push -u origin feature_01
+
+# 如果持续超时，检查网络连接
+ping github.com
+
+# 修改 Git 超时时间
+git config http.postBuffer 524288000
+git config http.lowSpeedLimit 0
+git config http.lowSpeedTime 999999
+```
+
+---
+
+## 完整工作流示例
+
+```bash
+# 1. 创建功能分支
+git checkout -b feature/add-database
+
+# 2. 进行开发
+echo "-- 编辑文件 --" > file.txt
+git add file.txt
+git commit -m "feat(db): add database connection logic"
+
+# 3. 推送到远程
+git push -u origin feature/add-database
+
+# 4. 在 GitHub 创建 PR 或本地合并
+git checkout main
+git pull
+git merge feature/add-database
+git push
+
+# 5. 删除功能分支
+git branch -d feature/add-database
+git push origin --delete feature/add-database
+```
