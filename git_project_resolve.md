@@ -620,3 +620,352 @@ git checkout --track origin/feature_1.0.0.1  # 切换到新分支
 | `git push -u origin <分支名>` | 推送分支并设置追踪 |
 | `git branch -D <分支名>` | 强制删除本地分支 |
 | `git fetch origin` | 更新本地对远程分支的认知 |
+
+---
+
+# 问题 4：创建多层级分支开发流程
+
+**日期**: 2026-06-11  
+**状态**: ✅ 已完成
+
+---
+
+## 需求描述
+
+建立多层级分支开发流程，以支持个人独立开发与版本管理的结合：
+- `feature_zizhao`: 个人开发分支（私人工作区）
+- `feature_1.0.0.1`: 版本分支（版本功能集成）
+- `main`: 主分支（生产发布）
+
+---
+
+## 分支层级结构
+
+```
+feature_zizhao (个人开发分支)
+        ↓
+        合并到
+        ↓
+feature_1.0.0.1 (版本分支)
+        ↓
+        合并到
+        ↓
+main (主分支)
+```
+
+**优势**：
+- ✅ 个人开发不受其他分支变更影响
+- ✅ 版本分支统一管理版本功能
+- ✅ 主分支始终保持稳定
+- ✅ 支持多人并行开发
+- ✅ 清晰的发布流程
+
+---
+
+## 解决过程
+
+### 步骤 1：基于版本分支创建个人开发分支
+
+```bash
+git checkout feature_1.0.0.1    # 先切换到版本分支
+git checkout -b feature_zizhao  # 基于版本分支创建个人分支
+```
+
+**输出**:
+```
+Switched to a new branch 'feature_zizhao'
+```
+
+**说明**:
+- `feature_zizhao` 基于 `feature_1.0.0.1` 的最新提交
+- 所有个人开发工作都在此分支进行
+- 不会影响版本分支
+
+### 步骤 2：推送个人开发分支到远程
+
+```bash
+git push -u origin feature_zizhao
+```
+
+**输出**:
+```
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: 
+remote: Create a pull request for 'feature_zizhao' on GitHub by visiting:
+remote:      https://github.com/zizhao-ding/novel_project_by_claude/pull/new/feature_zizhao
+remote: 
+To https://github.com/zizhao-ding/novel_project_by_claude.git
+ * [new branch]      feature_zizhao -> feature_zizhao
+branch 'feature_zizhao' set up to track 'origin/feature_zizhao'.
+```
+
+### 步骤 3：验证分支结构
+
+```bash
+git branch -a
+```
+
+**输出**:
+```
+  feature_1.0.0.1
+* feature_zizhao                 ← 当前分支（个人开发）
+  main
+  remotes/origin/feature_1.0.0.1
+  remotes/origin/feature_zizhao
+  remotes/origin/main
+```
+
+---
+
+## 完整开发工作流程
+
+### 阶段 1：个人开发（在 feature_zizhao 分支）
+
+```bash
+# 切换到个人开发分支
+git checkout feature_zizhao
+
+# 进行开发
+# 编辑文件...
+
+# 提交更改
+git add .
+git commit -m "feat(feature_name): feature description"
+
+# 推送到远程
+git push
+```
+
+### 阶段 2：同步版本分支的最新代码
+
+```bash
+# 获取远程最新代码
+git fetch origin
+
+# 变基或合并版本分支的最新代码（避免冲突）
+git rebase origin/feature_1.0.0.1
+# 或使用合并（如果不想重新排列提交历史）
+# git merge origin/feature_1.0.0.1
+```
+
+### 阶段 3：个人开发完成，合并到版本分支
+
+**方式 A：在本地合并**
+
+```bash
+# 1. 切换到版本分支
+git checkout feature_1.0.0.1
+
+# 2. 更新版本分支到最新
+git pull
+
+# 3. 合并个人开发分支
+git merge feature_zizhao
+
+# 4. 推送到远程
+git push
+```
+
+**方式 B：使用 Pull Request（推荐，便于代码审查）**
+
+```bash
+# 在 GitHub 网页上：
+# 1. 创建 PR：feature_zizhao → feature_1.0.0.1
+# 2. 填写 PR 标题和描述
+# 3. 等待团队审查
+# 4. 批准后点击 Merge 按钮
+```
+
+### 阶段 4：版本分支合并到主分支（发布版本）
+
+```bash
+# 1. 切换到主分支
+git checkout main
+
+# 2. 更新主分支到最新
+git pull
+
+# 3. 合并版本分支
+git merge feature_1.0.0.1
+
+# 4. 推送到远程（正式发布）
+git push
+```
+
+---
+
+## 日常开发操作
+
+### 操作 1：查看个人分支与版本分支的差异
+
+```bash
+git diff feature_1.0.0.1
+```
+
+### 操作 2：查看个人分支新增的提交
+
+```bash
+git log --oneline feature_1.0.0.1..feature_zizhao
+```
+
+### 操作 3：查看个人分支的提交历史
+
+```bash
+git log --oneline -10
+```
+
+### 操作 4：撤销个人分支中的某个提交
+
+```bash
+# 软重置（保留更改）
+git reset --soft HEAD~1
+
+# 硬重置（丢弃更改）
+git reset --hard HEAD~1
+```
+
+### 操作 5：检查合并冲突（合并前预演）
+
+```bash
+# 进行不提交的合并预演
+git merge --no-commit --no-ff feature_zizhao
+
+# 如果有冲突，可以撤销
+git merge --abort
+
+# 解决冲突后再进行真正的合并
+git merge feature_zizhao
+```
+
+---
+
+## 多人协作场景
+
+### 场景 1：其他开发者要在个人分支上协作
+
+```bash
+# 1. 拉取最新代码
+git fetch origin
+
+# 2. 检出个人分支
+git checkout --track origin/feature_zizhao
+
+# 3. 进行开发
+# ...
+
+# 4. 推送更改
+git push
+```
+
+### 场景 2：版本分支有紧急更新需要同步
+
+```bash
+# 在个人分支上
+git fetch origin
+git rebase origin/feature_1.0.0.1  # 变基（推荐，保持历史清晰）
+# 或
+git merge origin/feature_1.0.0.1   # 合并
+```
+
+### 场景 3：合并完成后清理分支
+
+```bash
+# 1. 确认个人分支已合并
+git branch --merged feature_1.0.0.1
+
+# 2. 删除本地分支
+git branch -d feature_zizhao
+
+# 3. 删除远程分支
+git push origin --delete feature_zizhao
+```
+
+---
+
+## 分支策略最佳实践
+
+### 1. 提交信息规范
+
+```bash
+git commit -m "type(scope): subject
+
+body
+
+footer"
+```
+
+**类型**:
+- `feat`: 新功能
+- `fix`: 修复 bug
+- `docs`: 文档
+- `refactor`: 重构
+- `test`: 测试
+- `chore`: 其他
+
+### 2. 合并前检查清单
+
+- ✅ 本地分支所有更改已提交
+- ✅ 已同步目标分支的最新代码
+- ✅ 无合并冲突或冲突已解决
+- ✅ 提交信息符合规范
+- ✅ 代码已通过审查
+
+### 3. 定期维护
+
+```bash
+# 每天工作开始时
+git fetch origin
+git rebase origin/feature_1.0.0.1
+
+# 每个功能完成时
+git push
+git merge-request feature_zizhao → feature_1.0.0.1
+```
+
+---
+
+## 版本发布流程
+
+```
+个人开发完成
+        ↓
+个人 PR 到版本分支
+        ↓
+代码审查 + CI 检查
+        ↓
+批准合并
+        ↓
+版本分支 PR 到主分支
+        ↓
+最终审核
+        ↓
+合并到主分支
+        ↓
+标记版本标签（tag）
+        ↓
+发布版本
+```
+
+**标记版本**：
+
+```bash
+git tag -a v1.0.0.1 -m "Release version 1.0.0.1"
+git push origin v1.0.0.1
+```
+
+---
+
+## 最终结果
+
+✅ **多层级分支开发流程已建立**
+
+- 个人开发分支 `feature_zizhao` 已创建并推送
+- 完整的三层分支结构已验证
+- 清晰的开发流程已定义
+- 支持个人独立开发与版本管理的结合
+- 便于多人协作和版本控制
+
+**分支职责**:
+- `feature_zizhao`: 个人工作区，独立开发
+- `feature_1.0.0.1`: 版本集成点，功能汇总
+- `main`: 发布分支，稳定可靠
