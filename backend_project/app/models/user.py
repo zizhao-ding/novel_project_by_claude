@@ -1,0 +1,14 @@
+from sqlmodel import SQLModel, Field
+from datetime import datetime
+from typing import Optional
+
+
+class User(SQLModel, table=True):
+    """用户模型"""
+    __tablename__ = "users"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    username: str = Field(max_length=100, unique=True, index=True, description="用户名/账号")
+    password_hash: str = Field(max_length=255, description="密码哈希")
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="创建时间")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="更新时间")
