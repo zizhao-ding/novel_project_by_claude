@@ -1,433 +1,191 @@
-# novel_project_by_claude
+# 小说阅读平台
 
-sdd and harness to build
+支持 TXT 小说上传及在线阅读的 PC 端 Web 应用。
 
----
-
-## 📋 项目信息
-
-**项目名称**: novel_project_by_claude  
-**创建日期**: 2026-06-11  
-**仓库地址**: https://github.com/zizhao-ding/novel_project_by_claude
+> GitHub: https://github.com/zizhao-ding/novel_project_by_claude
 
 ---
 
-## 🌳 分支管理
+## 🚀 启动指南
 
-### 分支结构
+### 环境要求
 
-```
-feature_zizhao (个人开发分支)
-        ↓
-        合并到
-        ↓
-feature_1.0.0.1 (版本分支)
-        ↓
-        合并到
-        ↓
-main (主分支)
-```
+| 组件 | 要求 |
+|------|------|
+| Node.js | 18+ |
+| Python | 3.9+ |
+| macOS | `brew` 已安装 |
+| 包管理 | `pip3`（Python）、`npm`（Node） |
 
-### 分支说明
-
-| 分支名 | 用途 | 说明 |
-|--------|------|------|
-| `main` | 生产发布分支 | 稳定版本，随时可发布 |
-| `feature_1.0.0.1` | 版本开发分支 | 1.0.0.1 版本的所有功能集成 |
-| `feature_zizhao` | 个人开发分支 | 个人开发工作，定期合并到版本分支 |
-
----
-
-## 📖 开发工作流程
-
-### 第一步：个人开发（在 feature_zizhao 分支）
+### 1. 启动后端
 
 ```bash
-# 切换到个人开发分支
+cd backend_project
+
+# 首次运行：安装依赖
+pip3 install -r requirements.txt
+
+# 配置环境变量（首次）
+cp .env.example .env
+
+# 启动（http://localhost:8000）
+python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+启动后访问 http://localhost:8000/docs 查看 Swagger API 文档。
+
+> Windows 用户：使用 `python` 代替 `python3`，`pip` 代替 `pip3`。
+
+### 2. 启动前端
+
+```bash
+cd front_project
+
+# 首次运行：安装依赖
+npm install
+
+# 启动（http://localhost:5173）
+npx vite --host
+```
+
+前端 Vite 已配置代理，`/api` 请求自动转发到后端 `localhost:8000`。
+
+### 3. 暴露外网（ngrok）
+
+让没有连同一 WiFi 的人也能访问。前提：已完成 [ngrok 注册](https://dashboard.ngrok.com/signup) 和 authtoken 配置。
+
+```bash
+# 安装（首次）
+brew install ngrok
+
+# 启动（前后端必须已运行）
+ngrok http 5173 --request-header-add "ngrok-skip-browser-warning:1"
+```
+
+把终端显示的 `https://xxxx.ngrok-free.dev` 链接发给任何人即可访问。
+
+> 踩坑记录详见 `memory/ngrok-setup.md`
+
+### 一键启动脚本（终端分三窗口）
+
+```bash
+# 窗口1：后端
+cd backend_project && python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+# 窗口2：前端
+cd front_project && npx vite --host
+
+# 窗口3：外网隧道（可选）
+ngrok http 5173 --request-header-add "ngrok-skip-browser-warning:1"
+```
+
+---
+
+## 📋 Git 使用技巧
+
+### 第一次使用（克隆项目）
+
+```bash
+git clone https://github.com/zizhao-ding/novel_project_by_claude.git
+cd novel_project_by_claude
 git checkout feature_zizhao
-
-# 进行开发
-# 编辑文件...
-
-# 提交更改
-git add .
-git commit -m "feat(功能): 功能描述"
-
-# 推送到远程
-git push
 ```
 
-### 第二步：同步其他开发者的最新代码
-
-```bash
-# 获取远程最新代码
-git fetch origin
-
-# 同步版本分支的最新代码（避免冲突）
-git rebase origin/feature_1.0.0.1
-```
-
-### 第三步：合并到版本分支
-
-```bash
-# 切换到版本分支
-git checkout feature_1.0.0.1
-
-# 更新版本分支
-git pull
-
-# 合并个人开发分支
-git merge feature_zizhao
-
-# 推送到远程
-git push
-```
-
-**或使用 Pull Request**（推荐用于代码审查）：
-1. 在 GitHub 上创建 PR：`feature_zizhao` → `feature_1.0.0.1`
-2. 进行代码审查
-3. 批准后点击 Merge
-
-### 第四步：版本分支合并到主分支（发布）
-
-```bash
-# 切换到主分支
-git checkout main
-
-# 更新主分支
-git pull
-
-# 合并版本分支
-git merge feature_1.0.0.1
-
-# 推送到远程（发布）
-git push
-```
-
----
-
-## 📚 常用 Git 命令
-
-### 分支操作
-
-```bash
-# 查看所有分支
-git branch -a
-
-# 切换分支
-git checkout <分支名>
-
-# 创建并切换分支
-git checkout -b <分支名>
-
-# 推送分支到远程
-git push -u origin <分支名>
-
-# 删除本地分支
-git branch -d <分支名>
-
-# 删除远程分支
-git push origin --delete <分支名>
-```
-
-### 提交操作
+### 日常开发
 
 ```bash
 # 查看状态
 git status
 
-# 添加文件
+# 提交三部曲
 git add .
-
-# 提交更改
-git commit -m "type(scope): description"
-
-# 推送到远程
-git push
-
-# 拉取最新代码
-git pull
-```
-
-### 同步和合并
-
-```bash
-# 获取远程更新
-git fetch origin
-
-# 变基当前分支到目标分支
-git rebase origin/<分支名>
-
-# 合并分支
-git merge <分支名>
-
-# 查看分支之间的差异
-git diff <分支1>..<分支2>
-```
-
----
-
-## 💡 开发建议
-
-1. **定期同步**：经常运行 `git fetch origin` 和 `git rebase` 保持与版本分支同步
-2. **小颗粒提交**：将功能分解为多个小提交，便于审查和回滚
-3. **规范提交信息**：遵循 `type(scope): description` 的格式
-4. **代码审查**：使用 Pull Request 进行代码审查
-5. **文档记录**：在 [git_project_resolve.md](git_project_resolve.md) 中记录解决的 Git 问题
-
----
-
-## 🔍 常见问题解决
-
-详见 [git_project_resolve.md](git_project_resolve.md)：
-- 无法推送代码到远程仓库
-- 创建功能分支工作流
-- 分支重命名
-- 多层级分支开发流程
-
----
-
-## 📝 提交信息规范
-
-遵循 Conventional Commits 规范：
-
-```
-type(scope): subject
-
-body
-
-footer
-```
-
-**类型**：
-- `feat`: 新功能
-- `fix`: 修复 bug
-- `docs`: 文档
-- `style`: 代码格式
-- `refactor`: 重构
-- `test`: 测试
-- `chore`: 其他
-
-**示例**：
-```bash
-git commit -m "feat(auth): implement user login
-
-- Add login API endpoint
-- Implement JWT token generation
-- Add password validation"
-```
-
----
-
-## 📋 项目信息
-
-**项目名称**: novel_project_by_claude  
-**创建日期**: 2026-06-11  
-**仓库地址**: https://github.com/zizhao-ding/novel_project_by_claude
-
----
-
-## 🌳 分支管理
-
-### 分支结构
-
-```
-feature_zizhao (个人开发分支)
-        ↓
-        合并到
-        ↓
-feature_1.0.0.1 (版本分支)
-        ↓
-        合并到
-        ↓
-main (主分支)
-```
-
-### 分支说明
-
-| 分支名 | 用途 | 说明 |
-|--------|------|------|
-| `main` | 生产发布分支 | 稳定版本，随时可发布 |
-| `feature_1.0.0.1` | 版本开发分支 | 1.0.0.1 版本的所有功能集成 |
-| `feature_zizhao` | 个人开发分支 | 个人开发工作，定期合并到版本分支 |
-
----
-
-## 📖 开发工作流程
-
-### 第一步：个人开发（在 feature_zizhao 分支）
-
-```bash
-# 切换到个人开发分支
-git checkout feature_zizhao
-
-# 进行开发
-# 编辑文件...
-
-# 提交更改
-git add .
-git commit -m "feat(功能): 功能描述"
-
-# 推送到远程
+git commit -m "feat(模块): 做了什么"
 git push
 ```
-
-### 第二步：同步其他开发者的最新代码
-
-```bash
-# 获取远程最新代码
-git fetch origin
-
-# 同步版本分支的最新代码（避免冲突）
-git rebase origin/feature_1.0.0.1
-```
-
-### 第三步：合并到版本分支
-
-```bash
-# 切换到版本分支
-git checkout feature_1.0.0.1
-
-# 更新版本分支
-git pull
-
-# 合并个人开发分支
-git merge feature_zizhao
-
-# 推送到远程
-git push
-```
-
-**或使用 Pull Request**（推荐用于代码审查）：
-1. 在 GitHub 上创建 PR：`feature_zizhao` → `feature_1.0.0.1`
-2. 进行代码审查
-3. 批准后点击 Merge
-
-### 第四步：版本分支合并到主分支（发布）
-
-```bash
-# 切换到主分支
-git checkout main
-
-# 更新主分支
-git pull
-
-# 合并版本分支
-git merge feature_1.0.0.1
-
-# 推送到远程（发布）
-git push
-```
-
----
-
-## 📚 常用 Git 命令
 
 ### 分支操作
 
 ```bash
-# 查看所有分支
-git branch -a
-
-# 切换分支
-git checkout <分支名>
-
-# 创建并切换分支
-git checkout -b <分支名>
-
-# 推送分支到远程
-git push -u origin <分支名>
-
-# 删除本地分支
-git branch -d <分支名>
-
-# 删除远程分支
-git push origin --delete <分支名>
+git branch -a                  # 查看所有分支
+git checkout <分支名>           # 切换分支
+git checkout -b <分支名>        # 创建并切换新分支
 ```
 
-### 提交操作
+### 同步最新代码
 
 ```bash
-# 查看状态
-git status
+git pull                       # 拉取当前分支最新代码
+git fetch origin               # 获取所有远程更新
+```
 
-# 添加文件
-git add .
+### 查看改动
 
-# 提交更改
-git commit -m "type(scope): description"
+```bash
+git diff                       # 查看未暂存的改动
+git log --oneline -10          # 查看最近 10 条提交
+```
 
-# 推送到远程
+### Commit 格式
+
+```bash
+git commit -m "feat(模块): 简短的改动描述"
+```
+
+类型：`feat` 新功能 | `fix` 修bug | `docs` 文档 | `style` 格式 | `refactor` 重构 | `chore` 其他
+
+### 合并流程
+
+```
+feature_zizhao → feature_1.0.0.1 → main
+```
+
+```bash
+# 1. 合并到版本分支
+git checkout feature_1.0.0.1
+git pull
+git merge feature_zizhao
 git push
 
-# 拉取最新代码
+# 2. 合并到主分支（发布）
+git checkout main
 git pull
+git merge feature_1.0.0.1
+git push
 ```
 
-### 同步和合并
+> 推荐用 GitHub Pull Request 做代码审查后再合并。
 
-```bash
-# 获取远程更新
-git fetch origin
+---
 
-# 变基当前分支到目标分支
-git rebase origin/<分支名>
+## 📁 项目结构
 
-# 合并分支
-git merge <分支名>
-
-# 查看分支之间的差异
-git diff <分支1>..<分支2>
+```
+novel_project_by_claude/
+├── front_project/              # Vue 3 前端
+│   ├── src/views/              #   页面视图
+│   ├── src/stores/             #   Pinia 状态
+│   ├── src/services/           #   API 服务层
+│   ├── src/router/             #   路由
+│   └── vite.config.ts          #   Vite 配置（代理 + 别名）
+├── backend_project/            # FastAPI 后端
+│   ├── app/api/auth.py         #   认证接口
+│   ├── app/models/             #   数据模型
+│   ├── app/schemas/            #   Pydantic 模型
+│   └── .env                    #   环境变量
+├── .claude/rules/              # AI 编码规则（9个文件）
+├── spec/                       # 功能规格文档
+├── CLAUDE.md                   # AI 开发主入口
+├── AI开发过程.md                # AI 开发记录
+└── 技术选型.md                  # 技术选型文档
 ```
 
 ---
 
-## 💡 开发建议
+## 🔧 技术栈
 
-1. **定期同步**：经常运行 `git fetch origin` 和 `git rebase` 保持与版本分支同步
-2. **小颗粒提交**：将功能分解为多个小提交，便于审查和回滚
-3. **规范提交信息**：遵循 `type(scope): description` 的格式
-4. **代码审查**：使用 Pull Request 进行代码审查
-5. **文档记录**：在 [git_project_resolve.md](git_project_resolve.md) 中记录解决过的 Git 问题
-
----
-
-## 🔍 常见问题解决
-
-详见 [git_project_resolve.md](git_project_resolve.md)：
-- 无法推送代码到远程仓库
-- 创建功能分支工作流
-- 分支重命名
-- 多层级分支开发流程
-
----
-
-## 📝 提交信息规范
-
-遵循 Conventional Commits 规范：
-
-```
-type(scope): subject
-
-body
-
-footer
-```
-
-**类型**：
-- `feat`: 新功能
-- `fix`: 修复 bug
-- `docs`: 文档
-- `style`: 代码格式
-- `refactor`: 重构
-- `test`: 测试
-- `chore`: 其他
-
-**示例**：
-```bash
-git commit -m "feat(auth): implement user login
-
-- Add login API endpoint
-- Implement JWT token generation
-- Add password validation"
-```
+| 层 | 技术 |
+|----|------|
+| 前端 | Vue 3 + TypeScript + Vite + Element Plus + Pinia |
+| 后端 | Python FastAPI + SQLModel + SQLite |
+| 认证 | bcrypt + JWT (python-jose) |
+| 工具 | Prettier + ngrok |
