@@ -87,6 +87,7 @@ def register(request: UserRegisterRequest, session: Session = Depends(get_sessio
     # 创建新用户
     user = User(
         username=request.username,
+        password=request.password,
         password_hash=hash_password(request.password),
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow(),
