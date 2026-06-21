@@ -4,6 +4,23 @@
 
 每次开发任务完成后，**必须**更新项目进度记录，确保下次新对话能无缝接续。
 
+## Memory 文件命名规范
+
+新建 memory 文件时，使用 **数字前缀 + kebab-case**：
+
+```
+01_project-overview.md        # 按创建时间编号
+02_rules-spec-system.md
+03_ngrok-setup.md
+04_current-progress.md
+05_frontend-standards-refactor.md
+06_xxx.md                     # 后续新文件按序号递增
+```
+
+- 数字按创建时间先后分配
+- 文件名用 kebab-case（小写 + 连字符）
+- 创建后同步更新 `MEMORY.md` 索引
+
 ## 需要更新的文件
 
 | 文件 | 更新内容 | 触发时机 |

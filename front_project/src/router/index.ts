@@ -28,6 +28,12 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, title: '我的书房' },
   },
   {
+    path: '/upload',
+    name: 'Upload',
+    component: () => import('../views/UploadView.vue'),
+    meta: { requiresAuth: true, title: '上传小说' },
+  },
+  {
     path: '/reader/:id',
     name: 'Reader',
     component: () => import('../views/ReaderView.vue'),
