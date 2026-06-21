@@ -41,9 +41,11 @@ const router = useRouter();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-function handleLogout() {
-  userStore.logout();
-  router.push('/');
+async function handleLogout() {
+  const confirmed = await userStore.logout();
+  if (confirmed) {
+    router.push('/');
+  }
 }
 </script>
 

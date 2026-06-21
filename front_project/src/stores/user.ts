@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import type { User } from '../types/user';
 import { authApi } from '../services/auth';
 
@@ -77,11 +77,21 @@ export const useUserStore = defineStore('user', () => {
   /**
    * 退出登录
    */
-  function logout() {
+  async function logout() {
+    try {
+      await ElMessageBox.confirm('确定要退出登录吗？', '确认退出', {
+        confirmButtonText: '确定退出',
+        cancelButtonText: '取消',
+        type: 'warning',
+      });
+    } catch {
+      return false;
+    }
     user.value = null;
     token.value = null;
     localStorage.removeItem('token');
     ElMessage.success('已退出登录');
+    return true;
   }
 
   /**

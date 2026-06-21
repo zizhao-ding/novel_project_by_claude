@@ -189,3 +189,19 @@ novel_project_by_claude/
 | 后端 | Python FastAPI + SQLModel + SQLite |
 | 认证 | bcrypt + JWT (python-jose) |
 | 工具 | Prettier + ngrok |
+
+---
+
+## 💾 查看 Memory 进度记录
+
+项目使用 Claude Code 的 Memory 系统记录开发进度，跨对话持久化。
+
+**快速打开**：
+
+```bash
+open /Users/peiwending/.claude/projects/-Users-peiwending-Desktop-novel-project-by-claude
+```
+
+或者在 Finder 中手动导航：按 `Cmd + Shift + .` 显示隐藏文件 → 进入 `.claude` → `projects` → `-Users-peiwending-Desktop-novel-project-by-claude` → `memory`
+
+文件按创建时间编号：`01_project-overview.md` `02_rules-spec-system.md` `03_ngrok-setup.md` `04_current-progress.md` `05_frontend-standards-refactor.md`
