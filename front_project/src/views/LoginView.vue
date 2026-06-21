@@ -3,31 +3,13 @@
     <div class="auth-card">
       <h1 class="auth-card__title">登录</h1>
 
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-position="top"
-        @keyup.enter="handleLogin"
-      >
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" @keyup.enter="handleLogin">
         <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="formData.username"
-            placeholder="请输入用户名"
-            :prefix-icon="User"
-            size="large"
-          />
+          <el-input v-model="formData.username" placeholder="请输入用户名" :prefix-icon="User" size="large" />
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
-          <el-input
-            v-model="formData.password"
-            type="password"
-            placeholder="请输入密码"
-            :prefix-icon="Lock"
-            show-password
-            size="large"
-          />
+          <el-input v-model="formData.password" type="password" placeholder="请输入密码" :prefix-icon="Lock" show-password size="large" />
         </el-form-item>
 
         <el-form-item>
@@ -35,13 +17,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button
-            type="primary"
-            size="large"
-            :loading="userStore.loading"
-            class="auth-card__submit"
-            @click="handleLogin"
-          >
+          <el-button type="primary" size="large" :loading="userStore.loading" class="auth-card__submit" @click="handleLogin">
             登 录
           </el-button>
         </el-form-item>
@@ -76,9 +52,7 @@ const formData = reactive({
 const rememberMe = ref(false);
 
 const formRules: FormRules = {
-  username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-  ],
+  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, message: '密码长度不能少于6位', trigger: 'blur' },

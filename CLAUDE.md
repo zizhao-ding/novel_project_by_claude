@@ -34,7 +34,8 @@ CLAUDE.md                          ← 你在这里（主入口）
 │   ├── 06_styling.md              ← 样式 & CSS 规范
 │   ├── 07_routing.md              ← 路由规范
 │   ├── 08_error_handling.md       ← 错误处理
-│   └── 09_git_conventions.md      ← Git 提交规范
+│   ├── 09_git_conventions.md      ← Git 提交规范
+│   └── 10_progress_tracking.md    ← 进度自动记录
 └── spec/                          ← 📐 规格：定义 WHAT（要做什么）
     ├── _template.md               ← 功能规格模板
     └── 01_auth_register.md        ← 示例：用户认证规格

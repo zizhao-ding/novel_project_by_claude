@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import { ElMessage } from 'element-plus';
 import type { User } from '../types/user';
 import { authApi } from '../services/auth';
-import { sha256 } from '../utils/crypto';
 
 export const useUserStore = defineStore('user', () => {
   // ── State ──
@@ -23,9 +23,7 @@ export const useUserStore = defineStore('user', () => {
     loading.value = true;
     error.value = null;
     try {
-      // 前端 SHA256 哈希后发送
-      const hashedPassword = sha256(password);
-      const res = await authApi.register({ username, password: hashedPassword });
+      const res = await authApi.register({ username, password });
 
       if (res.code === 0) {
         ElMessage.success('注册成功，请登录');
@@ -53,8 +51,7 @@ export const useUserStore = defineStore('user', () => {
     loading.value = true;
     error.value = null;
     try {
-      const hashedPassword = sha256(password);
-      const res = await authApi.login({ username, password: hashedPassword });
+      const res = await authApi.login({ username, password });
 
       if (res.code === 0 && res.data) {
         token.value = res.data.token;
@@ -115,10 +112,17 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     // State
-    user, token, loading, error,
+    user,
+    token,
+    loading,
+    error,
     // Getters
     isAuthenticated,
     // Actions
-    register, login, logout, fetchProfile, clearError,
+    register,
+    login,
+    logout,
+    fetchProfile,
+    clearError,
   };
 });
