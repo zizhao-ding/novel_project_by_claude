@@ -7,7 +7,7 @@ export interface User {
 
 // 后端统一响应格式
 export interface ApiResponse<T = unknown> {
-  code: number;       // 0 = 成功, 非0 = 失败
+  code: number; // 0 = 成功, 非0 = 失败
   message: string;
   data: T | null;
 }

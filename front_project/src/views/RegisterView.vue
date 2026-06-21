@@ -3,20 +3,9 @@
     <div class="auth-card">
       <h1 class="auth-card__title">注册</h1>
 
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-position="top"
-        @keyup.enter="handleRegister"
-      >
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" @keyup.enter="handleRegister">
         <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="formData.username"
-            placeholder="请输入用户名（3-100个字符）"
-            :prefix-icon="User"
-            size="large"
-          />
+          <el-input v-model="formData.username" placeholder="请输入用户名（3-100个字符）" :prefix-icon="User" size="large" />
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
@@ -42,13 +31,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button
-            type="primary"
-            size="large"
-            :loading="userStore.loading"
-            class="auth-card__submit"
-            @click="handleRegister"
-          >
+          <el-button type="primary" size="large" :loading="userStore.loading" class="auth-card__submit" @click="handleRegister">
             注 册
           </el-button>
         </el-form-item>

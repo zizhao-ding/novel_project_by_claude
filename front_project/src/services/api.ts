@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import { ElMessage } from 'element-plus';
 
 class ApiService {
   private instance: AxiosInstance;
@@ -34,7 +35,7 @@ class ApiService {
           ElMessage.error('服务器错误，请稍后重试');
         }
         return Promise.reject(error);
-      }
+      },
     );
   }
 

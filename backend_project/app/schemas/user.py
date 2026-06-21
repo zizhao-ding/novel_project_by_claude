@@ -9,6 +9,12 @@ class UserRegisterRequest(BaseModel):
     password: str = Field(..., min_length=6, max_length=128, description="密码")
 
 
+class UserLoginRequest(BaseModel):
+    """用户登录请求"""
+    username: str = Field(..., min_length=1, max_length=100, description="账号")
+    password: str = Field(..., min_length=1, max_length=128, description="密码")
+
+
 class UserResponse(BaseModel):
     """用户信息"""
     id: int
@@ -19,8 +25,21 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-class UserRegisterResponse(BaseModel):
-    """用户注册响应"""
-    code: int = Field(description="状态码, 0表示成功")
-    message: str = Field(description="提示信息")
-    data: Optional[UserResponse] = Field(default=None, description="用户信息")
+class LoginData(BaseModel):
+    """登录响应数据"""
+    token: str
+    user: UserResponse
+
+
+class AuthResponse(BaseModel):
+    """注册/资料 通用响应"""
+    code: int = Field(default=0, description="状态码")
+    message: str = Field(default="", description="提示信息")
+    data: Optional[UserResponse] = Field(default=None)
+
+
+class LoginResponse(BaseModel):
+    """登录响应"""
+    code: int = Field(default=0, description="状态码")
+    message: str = Field(default="", description="提示信息")
+    data: Optional[LoginData] = Field(default=None)

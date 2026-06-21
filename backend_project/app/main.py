@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from app.database import create_db_and_tables
@@ -17,6 +18,15 @@ app = FastAPI(
     description="支持图片和文本小说上传及在线阅读的后端服务",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+# CORS 中间件（允许前端开发时跨域访问）
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 注册路由
