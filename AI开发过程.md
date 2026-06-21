@@ -177,12 +177,53 @@ AI开发过程.md  ← 你在这里（开发过程记录）
     │
     ├── Memory 记忆系统 ──────────────── 跨对话进度持久化
     │   ├── MEMORY.md                 ─ 记忆索引（自动加载）
-    │   └── memory/*.md               ─ 4条项目记忆
+    │   └── memory/*.md               ─ 5条项目记忆
     │
     └── 技术选型.md  ─────────────────── 技术栈和架构决策
 ```
 
-## 七、关键约束速查
+## 七、ngrok 内网穿透配置
+
+### 背景
+
+手机和电脑连同一 WiFi 时可通过局域网 IP 访问（`http://192.168.x.x:5173`），但要让外网的人也能访问，需要 ngrok。
+
+### 安装
+
+```bash
+brew install ngrok
+```
+
+### 首次配置
+
+1. https://dashboard.ngrok.com/signup 注册（GitHub 一键登录）
+2. 获取 authtoken 并配置：`ngrok config add-authtoken <token>`
+3. 遇到 macOS 安全拦截：`sudo xattr -d com.apple.quarantine /opt/homebrew/bin/ngrok`
+
+### 启动
+
+```bash
+# 前后端必须先用 --host 启动（后端 8000 + 前端 npx vite --host）
+ngrok http 5173 --request-header-add "ngrok-skip-browser-warning:1"
+```
+
+终端显示 `www.ngrok-free.dev 网址 -> http://localhost:5173`，把网址发给任何人即可。
+
+### 踩坑记录
+
+| 问题 | 解决 |
+|------|------|
+| 版本过旧 `ERR_NGROK_121` | `ngrok update` 或官网下载新版 |
+| 手机打开显示英文警告页 | 加参数 `--request-header-add "ngrok-skip-browser-warning:1"` |
+| Vite 拒绝 ngrok 域名 403 | `vite.config.ts` 加 `allowedHosts: ['.ngrok-free.dev']` |
+
+### 已修改文件
+
+- `front_project/vite.config.ts` — 添加 `allowedHosts`
+- `memory/ngrok-setup.md` — 完整配置指南
+- `MEMORY.md` — 已索引
+
+## 八、关键约束速查
 
 以下规则 **不可违反**：
 

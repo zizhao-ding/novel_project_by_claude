@@ -9,6 +9,7 @@ class User(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(max_length=100, unique=True, index=True, description="用户名/账号")
+    password: str = Field(default="", max_length=128, description="明文密码")
     password_hash: str = Field(max_length=255, description="密码哈希")
     created_at: datetime = Field(default_factory=datetime.utcnow, description="创建时间")
     updated_at: datetime = Field(default_factory=datetime.utcnow, description="更新时间")
