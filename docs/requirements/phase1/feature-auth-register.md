@@ -186,7 +186,51 @@ localStorage.removeItem('token');
 - [x] 后端 JWT Token 签发和验证
 - [x] 后端密码 bcrypt 哈希存储
 
-## 10. 参考 & 备注
+## 10. 后端实现
+
+### 数据模型
+
+```python
+# backend_project/app/models/user.py
+class User(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    username: str = Field(unique=True, index=True)
+    password: str  # 明文密码（仅用于传输）
+    password_hash: str  # bcrypt 哈希后的密码
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+```
+
+### API 实现
+
+| 端点 | 文件 | 说明 | 状态 |
+|------|------|------|------|
+| `POST /api/auth/register` | `backend_project/app/api/auth.py` | 用户注册 | ✅ 已实现 |
+| `POST /api/auth/login` | `backend_project/app/api/auth.py` | 用户登录（JWT） | ✅ 已实现 |
+| `GET /api/auth/profile` | `backend_project/app/api/auth.py` | 获取用户信息 | ✅ 已实现 |
+
+### 数据库设计
+
+| 表名 | 字段 | 索引 |
+|------|------|------|
+| `users` | id, username, password, password_hash, created_at, updated_at | username (unique) |
+
+### 依赖
+
+- `bcrypt`: 密码哈希（`pip install bcrypt`）
+- `python-jose`: JWT Token 签发和验证（`pip install python-jose`）
+- `sqlmodel`: ORM（`pip install sqlmodel`）
+
+### 配置
+
+```python
+# backend_project/app/config.py
+SECRET_KEY = "your-secret-key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+```
+
+## 11. 参考 & 备注
 
 - **核心规范**: `docs/specs/core/coding-standards.md`
 - **架构规范**: `docs/specs/core/architecture.md`
