@@ -64,7 +64,7 @@ ngrok http 5173 --request-header-add "ngrok-skip-browser-warning:1"
 
 把终端显示的 `https://xxxx.ngrok-free.dev` 链接发给任何人即可访问。
 
-> 踩坑记录详见 `memory/ngrok-setup.md`
+> 踩坑记录详见 `docs/ai-memory/global/02_ngrok-setup.md`
 
 ### 一键启动脚本（终端分三窗口）
 
@@ -172,11 +172,13 @@ novel_project_by_claude/
 │   ├── app/models/             #   数据模型
 │   ├── app/schemas/            #   Pydantic 模型
 │   └── .env                    #   环境变量
-├── .claude/rules/              # AI 编码规则（9个文件）
-├── spec/                       # 功能规格文档
+├── docs/                       # 📚 项目文档 (Harness 架构)
+│   ├── index.md                #   总索引
+│   ├── requirements/           #   需求文档
+│   ├── specs/core/             #   核心规范
+│   └── ai-memory/global/       #   全局经验
 ├── CLAUDE.md                   # AI 开发主入口
-├── AI开发过程.md                # AI 开发记录
-└── 技术选型.md                  # 技术选型文档
+└── ai-process.md               # AI 开发记录
 ```
 
 ---
@@ -194,14 +196,12 @@ novel_project_by_claude/
 
 ## 💾 查看 Memory 进度记录
 
-项目使用 Claude Code 的 Memory 系统记录开发进度，跨对话持久化。
+项目使用 Harness 六层架构的文档体系记录开发进度，跨对话持久化。
 
 **快速打开**：
 
 ```bash
-open /Users/peiwending/.claude/projects/-Users-peiwending-Desktop-novel-project-by-claude
+open /Users/peiwending/Desktop/novel_project_by_claude/docs/ai-memory/global
 ```
 
-或者在 Finder 中手动导航：按 `Cmd + Shift + .` 显示隐藏文件 → 进入 `.claude` → `projects` → `-Users-peiwending-Desktop-novel-project-by-claude` → `memory`
-
-文件按创建时间编号：`01_project-overview.md` `02_rules-spec-system.md` `03_ngrok-setup.md` `04_current-progress.md` `05_frontend-standards-refactor.md`
+文件按创建时间编号：`01_project-overview.md` `02_ngrok-setup.md` `03_current-progress.md` `04_harness-architecture.md`

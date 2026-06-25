@@ -1,8 +1,9 @@
-# 用户注册与登录
+# REQ-P1-001: 用户注册与登录
 
-> **状态**: 🚧 开发中
+> **状态**: ✅ 已完成
 > **优先级**: P0 核心
-> **关联 Spec**: 无
+> **创建日期**: 2026-06-25
+> **最后更新**: 2026-06-25
 
 ## 1. 概述
 
@@ -126,67 +127,50 @@ localStorage.removeItem('token');
 | POST | `/api/auth/login` | 登录 | `{ username, password }` | `{ user: User, token: string }` |
 | GET | `/api/auth/profile` | 获取用户信息 | Header: `Authorization: Bearer <token>` | `User` |
 
-> 后端已实现 `POST /api/auth/register` 端点，登录和 profile 端点待实现。
+> 后端已实现全部认证接口：`POST /api/auth/register`、`POST /api/auth/login`、`GET /api/auth/profile`。
 
 ## 8. 验收标准
 
 ### 场景 1: 用户注册成功
 
-```
-Given 用户在注册页
-When  用户填写合法用户名、邮箱、密码并提交
-Then  系统调用注册 API
-      注册成功后自动跳转到首页
-      显示"注册成功"提示
-      导航栏显示用户名（已登录状态）
-```
+- [x] 用户在注册页填写合法用户名、邮箱、密码并提交
+- [x] 系统调用注册 API
+- [x] 注册成功后自动跳转到首页
+- [x] 显示"注册成功"提示
+- [x] 导航栏显示用户名（已登录状态）
 
 ### 场景 2: 注册表单校验
 
-```
-Given 用户在注册页
-When  用户提交空表单 / 两次密码不一致 / 密码少于6位
-Then  表单显示对应的校验错误提示
-      不会发起 API 请求
-```
+- [x] 用户提交空表单时显示校验错误
+- [x] 两次密码不一致时显示校验错误
+- [x] 密码少于6位时显示校验错误
+- [x] 校验失败时不发起 API 请求
 
 ### 场景 3: 用户登录成功
 
-```
-Given 用户在登录页
-When  用户输入正确的用户名和密码并提交
-Then  系统调用登录 API
-      登录成功后跳转到首页（或 redirect 目标页）
-      显示"登录成功"提示
-      token 写入 localStorage
-```
+- [x] 用户在登录页输入正确的用户名和密码并提交
+- [x] 系统调用登录 API
+- [x] 登录成功后跳转到首页（或 redirect 目标页）
+- [x] 显示"登录成功"提示
+- [x] token 写入 localStorage
 
 ### 场景 4: 登录失败
 
-```
-Given 用户在登录页
-When  用户输入错误的密码
-Then  显示"用户名或密码错误"提示
-      不跳转页面
-```
+- [x] 用户输入错误的密码
+- [x] 显示"用户名或密码错误"提示
+- [x] 不跳转页面
 
 ### 场景 5: 登录状态持久化
 
-```
-Given 用户已登录（localStorage 中有有效 token）
-When  用户刷新页面
-Then  自动读取 token 并获取用户信息
-      保持登录状态
-```
+- [x] 用户已登录（localStorage 中有有效 token）
+- [x] 刷新页面后自动读取 token 并获取用户信息
+- [x] 保持登录状态
 
 ### 场景 6: 未登录访问受限页面
 
-```
-Given 用户未登录
-When  用户尝试访问 /library（需要登录的页面）
-Then  自动跳转到 /login?redirect=/library
-      登录后自动跳转回 /library
-```
+- [x] 用户未登录时尝试访问 /library
+- [x] 自动跳转到 /login?redirect=/library
+- [x] 登录后自动跳转回 /library
 
 ## 9. 技术实现要点
 
@@ -197,11 +181,18 @@ Then  自动跳转到 /login?redirect=/library
 - [x] 密码在前端做一次 SHA256 哈希后再发送（使用 crypto-js）
 - [x] 路由守卫在 `router/guards.ts` 中实现
 - [x] 首页（HomeView）含登录/登出状态展示
-- [ ] 后端登录 API（`POST /api/auth/login`）待实现
-- [ ] 后端 profile API（`GET /api/auth/profile`）待实现
+- [x] 后端登录 API（`POST /api/auth/login`）已实现
+- [x] 后端 profile API（`GET /api/auth/profile`）已实现
+- [x] 后端 JWT Token 签发和验证
+- [x] 后端密码 bcrypt 哈希存储
 
 ## 10. 参考 & 备注
 
-- 相关 Rules: `02_vue3_components.md`, `04_state_management.md`, `05_api_services.md`, `07_routing.md`
-- 后端已实现: `POST /api/auth/register`（`backend_project/app/api/auth.py`）
-- 密码哈希: 后端使用 bcrypt，前端使用 crypto-js SHA256
+- **核心规范**: `docs/specs/core/coding-standards.md`
+- **架构规范**: `docs/specs/core/architecture.md`
+- **Hook 规则**: `docs/specs/core/hook-rules.md`
+- **后端实现**: `backend_project/app/api/auth.py`（注册、登录、profile 全部实现）
+- **前端实现**: `front_project/src/views/LoginView.vue`、`RegisterView.vue`、`HomeView.vue`
+- **Store 实现**: `front_project/src/stores/user.ts`
+- **密码哈希**: 后端使用 bcrypt，前端使用 crypto-js SHA256
+- **JWT 配置**: `backend_project/app/config.py`
