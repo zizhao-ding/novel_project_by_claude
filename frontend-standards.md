@@ -2,8 +2,8 @@
 
 > 📌 **本文档定义「为什么」——架构决策、设计理由、背景约束。**
 > 具体代码怎么写（「怎么做」）请查看对应的规则文件：
-> - **Rules**: `.claude/rules/` — 按领域拆分的编码标准
-> - **Specs**: `spec/` — 功能需求与验收标准
+> - **核心规范**: `docs/specs/core/` — 编码规范、架构规范、Hook 规则
+> - **需求文档**: `docs/requirements/` — 功能需求与验收标准
 > - **主入口**: `CLAUDE.md` — 项目总体开发理念
 
 ---
@@ -53,7 +53,7 @@ src/
 
 > **为什么组件用 PascalCase？** Vue 官方推荐，与 SFC 的组件注册机制一致，且区分于普通 JS 模块。
 
-代码示例见：`.claude/rules/01_project_structure.md`
+代码示例见：`docs/specs/core/coding-standards.md`
 
 ---
 
@@ -69,7 +69,7 @@ src/
 
 **禁止 Options API**：保持代码风格统一，避免同一项目中两种写法混杂。
 
-代码示例见：`.claude/rules/02_vue3_components.md`
+代码示例见：`docs/specs/core/coding-standards.md`
 
 ### 2.2 TypeScript
 
@@ -81,7 +81,7 @@ src/
 
 **约束**：所有新文件使用 `.ts`，所有 `.vue` 使用 `<script setup lang="ts">`。
 
-代码示例见：`.claude/rules/03_typescript.md`
+代码示例见：`docs/specs/core/coding-standards.md`
 
 ### 2.3 Pinia（非 Vuex）
 
@@ -92,7 +92,7 @@ src/
 - 无 Mutation 概念，API 更简洁
 - 支持多个 Store 实例，模块化更自然
 
-代码示例见：`.claude/rules/04_state_management.md`
+代码示例见：`docs/specs/core/architecture.md`
 
 ### 2.4 Element Plus
 
@@ -112,7 +112,7 @@ src/
 - 响应拦截器统一处理 401、500 等错误
 - 避免在每个组件中重复编写鉴权和错误处理逻辑
 
-代码示例见：`.claude/rules/05_api_services.md`
+代码示例见：`docs/specs/core/architecture.md`
 
 ### 2.6 BEM + UnoCSS + Element Plus 变量
 
@@ -126,7 +126,7 @@ src/
 
 > **为什么用 BEM 而非 CSS Modules？** BEM 命名约定不依赖构建工具，调试时类名语义清晰，且与 SCSS 嵌套语法配合良好。
 
-代码示例见：`.claude/rules/06_styling.md`
+代码示例见：`docs/specs/core/coding-standards.md`
 
 ---
 
@@ -138,7 +138,7 @@ src/
 - **路由守卫分层**：鉴权逻辑放在 `router/guards.ts`，不污染路由配置文件
 - **Meta 驱动**：页面标题、权限要求等信息通过 `meta` 字段声明
 
-代码示例见：`.claude/rules/07_routing.md`
+代码示例见：`docs/specs/core/architecture.md`
 
 ### 3.2 错误处理
 
@@ -153,7 +153,7 @@ src/
 
 > **为什么不只用全局错误处理？** 不同层级的错误需要不同的用户提示和恢复策略。全局兜底保证不会白屏，业务层给出具体操作引导。
 
-代码示例见：`.claude/rules/08_error_handling.md`
+代码示例见：`docs/specs/core/architecture.md`
 
 ### 3.3 数据流
 
@@ -209,4 +209,4 @@ main                    # 生产分支
 
 类型：`feat` | `fix` | `docs` | `style` | `refactor` | `perf` | `test` | `chore`
 
-代码示例见：`.claude/rules/09_git_conventions.md`
+代码示例见：`docs/specs/core/coding-standards.md`

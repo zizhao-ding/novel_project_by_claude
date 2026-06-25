@@ -6,55 +6,231 @@
 
 这是一个**小说在线阅读平台**，支持图片和文本小说（TXT格式）的上传及在线阅读，专注于 PC 端网页体验。
 
+采用 **Harness 六层架构**实现 AI 驱动开发。
+
+### 项目信息
+- **项目名称**: 小说阅读平台
+- **项目类型**: 全栈应用（Vue 3 前端 + Python FastAPI 后端）
+- **创建日期**: 2026-06-25
+- **当前阶段**: 开发中
+
 ## 技术栈
 
-| 类别 | 技术 | 版本 |
-|------|------|------|
-| 框架 | Vue 3 (Composition API + `<script setup>`) | ^3.5 |
-| 语言 | **TypeScript**（强制，禁止纯 JS） | - |
-| 构建 | Vite | ^8.0 |
-| UI 库 | **Element Plus**（按需导入） | - |
-| CSS 方案 | UnoCSS + SCSS (BEM 命名) | - |
-| 状态管理 | Pinia (Setup Store 模式) | ^3.0 |
-| 路由 | Vue Router (懒加载) | ^4.6 |
-| HTTP | Axios (统一拦截器封装) | ^1.18 |
-| 国际化 | vue-i18n | ^11.4 |
-| 工具库 | @vueuse/core | ^14.3 |
+| 类别 | 技术 | 版本 | 说明 |
+|------|------|------|------|
+| 框架 | Vue 3 (Composition API + `<script setup>`) | ^3.5 | 强制使用 |
+| 语言 | **TypeScript**（强制，禁止纯 JS） | - | 严格模式 |
+| 构建 | Vite | ^8.0 | 快速构建 |
+| UI 库 | **Element Plus**（按需导入） | - | 禁止其他 UI 库 |
+| CSS 方案 | UnoCSS + SCSS (BEM 命名) | - | 原子化 + 自定义 |
+| 状态管理 | Pinia (Setup Store 模式) | ^3.0 | 持久化存储 |
+| 路由 | Vue Router (懒加载) | ^4.6 | 路由守卫 |
+| HTTP | Axios (统一拦截器封装) | ^1.18 | 统一错误处理 |
+| 国际化 | vue-i18n | ^11.4 | 多语言支持 |
+| 工具库 | @vueuse/core | ^14.3 | 实用工具 |
 
-## Rules & Spec 体系
+## Harness 六层架构
 
 ```
-CLAUDE.md                          ← 你在这里（主入口）
-├── .claude/rules/                 ← 📋 规则：定义 HOW（怎么写代码）
-│   ├── 01_project_structure.md    ← 目录结构 & 文件命名
-│   ├── 02_vue3_components.md      ← Vue 3 组件开发规范
-│   ├── 03_typescript.md           ← TypeScript 类型规范
-│   ├── 04_state_management.md     ← Pinia 状态管理
-│   ├── 05_api_services.md         ← API 服务层
-│   ├── 06_styling.md              ← 样式 & CSS 规范
-│   ├── 07_routing.md              ← 路由规范
-│   ├── 08_error_handling.md       ← 错误处理
-│   ├── 09_git_conventions.md      ← Git 提交规范
-│   ├── 10_progress_tracking.md    ← 进度自动记录
-│   └── 11_confirm_dialog.md       ← 敏感操作二次确认
-└── spec/                          ← 📐 规格：定义 WHAT（要做什么）
-    ├── _template.md               ← 功能规格模板
-    └── 01_auth_register.md        ← 示例：用户认证规格
+┌─────────────────────────────────────────────┐
+│  Layer 6: 验收层 (Acceptance)                │
+│  - 自动化测试                                │
+│  - 验收标准检查                              │
+│  - 状态更新                                  │
+├─────────────────────────────────────────────┤
+│  Layer 5: 审核层 (Review)                    │
+│  - 代码审核                                  │
+│  - 规范检查                                  │
+│  - 质量评估                                  │
+├─────────────────────────────────────────────┤
+│  Layer 4: 执行层 (Execution)                 │
+│  - 代码生成                                  │
+│  - 文件操作                                  │
+│  - 构建部署                                  │
+├─────────────────────────────────────────────┤
+│  Layer 3: 方案层 (Solution)                  │
+│  - 技术方案                                  │
+│  - 架构设计                                  │
+│  - 接口定义                                  │
+├─────────────────────────────────────────────┤
+│  Layer 2: 规范层 (Specification)             │
+│  - 编码规范                                  │
+│  - 架构规范                                  │
+│  - Hook 规则                                 │
+├─────────────────────────────────────────────┤
+│  Layer 1: 需求层 (Requirement)               │
+│  - 需求文档                                  │
+│  - 验收标准                                  │
+│  - 状态管理                                  │
+└─────────────────────────────────────────────┘
 ```
 
-- **规则（Rule）**：持久有效的编码标准，每次写代码时自动适用。
-- **规格（Spec）**：按功能定义的需求文档，实现某个功能前必须先阅读对应 spec。
+## 文档结构
 
-完整的规范参考手册见：`前端开发规范.md`（760行完整版，rules 文件是其精华提取）。
+### 需求文档
+- **路径**: `docs/requirements/`
+- **索引**: `docs/requirements/index.md`
+- **状态**: `pending` / `developing` / `done`
+- **格式**: `feature-{功能名}.md`
 
-## AI 开发工作流
+### 规范文档
+| 类型 | 路径 | 读取时机 | 说明 |
+|------|------|----------|------|
+| 核心规范 | `docs/specs/core/` | 启动时必读 | 编码规范、架构规范、Hook 规则 |
+| 详细规范 | `docs/specs/detail/` | 按需读取 | 详细实现指南 |
+| 模块规范 | `docs/specs/module/` | 开发特定模块时 | 模块特定规范 |
 
-当接到前端开发任务时，按以下流程执行：
+### 记忆文档
+- **全局经验**: `docs/ai-memory/global/` - 跨模块的经验积累
+- **模块经验**: `docs/ai-memory/module/` - 特定模块的经验
 
-1. **读取 Spec** → 在 `spec/` 目录查找对应功能规格，理解需求和验收标准
-2. **加载 Rules** → 根据任务类型加载相关规则文件（至少加载 `01_project_structure.md` 和 `02_vue3_components.md`）
-3. **遵循规范** → 生成代码时严格遵循 rules 中的 ✅ 示例，避免 ❌ 示例
-4. **验证一致性** → 确保代码风格与已有代码保持一致
+## 开发流程
+
+### 启动阶段 (自动执行)
+
+当开始新的开发会话时，**必须**按顺序执行：
+
+1. **读取总索引**: `docs/index.md`
+   - 了解项目整体结构
+   - 获取文档导航信息
+
+2. **读取需求索引**: `docs/requirements/index.md`
+   - 了解当前需求状态
+   - 获取待处理需求列表
+
+3. **读取核心规范**: `docs/specs/core/`
+   - `coding-standards.md` - 编码规范
+   - `architecture.md` - 架构规范
+   - `hook-rules.md` - Hook 检查规则
+
+### 开发阶段
+
+```mermaid
+graph TD
+    A[扫描需求文档] --> B{找到待处理需求}
+    B -->|是| C[提示用户确认]
+    B -->|否| D[等待新需求]
+    C --> E[读取相关规范]
+    E --> F[生成技术方案]
+    F --> G{用户确认方案}
+    G -->|是| H[开始编码]
+    G -->|否| F
+    H --> I[Hook 实时检查]
+    I --> J[执行代码]
+    J --> K[代码审核]
+    K --> L[自动更新状态]
+    L --> A
+```
+
+#### 详细步骤
+
+1. **扫描需求文档**
+   - 扫描 `docs/requirements/` 目录
+   - 找到 `pending` 或 `developing` 状态的任务
+   - 按优先级排序
+
+2. **提示用户确认**
+   - 显示需求详情
+   - 等待用户确认开始开发
+
+3. **读取相关规范**
+   - 读取核心规范（必读）
+   - 读取相关模块规范（按需）
+   - 读取详细规范（按需）
+
+4. **生成技术方案**
+   - 分析需求
+   - 设计技术方案
+   - 定义接口
+   - 规划实现步骤
+
+5. **用户确认方案**
+   - 展示技术方案
+   - 等待用户确认
+   - 根据反馈调整
+
+6. **开始编码 (Hook 实时检查)**
+   - 遵循编码规范
+   - PreToolUse 检查
+   - 代码生成
+
+7. **执行代码**
+   - PostToolUse 检查
+   - ESLint 检查
+   - TypeScript 检查
+
+8. **代码审核**
+   - 代码质量检查
+   - 规范执行检查
+   - 安全检查
+
+9. **自动更新状态**
+   - 更新需求状态
+   - 记录开发日志
+   - 更新记忆文档
+
+## 核心规范 (P0 - 必须遵守)
+
+### 编码规范
+详见 `docs/specs/core/coding-standards.md`
+
+**关键要点**:
+- 使用 TypeScript 严格模式
+- 遵循 Vue3 Composition API 最佳实践
+- 统一命名规范
+- 完善的错误处理
+- 必要的代码注释
+
+### 架构规范
+详见 `docs/specs/core/architecture.md`
+
+**关键要点**:
+- Harness 六层架构
+- 模块化设计
+- 状态管理规范
+- API 设计规范
+- 进度跟踪规范
+
+### Hook 检查规则
+详见 `docs/specs/core/hook-rules.md`
+
+**PreToolUse (工具调用前)**:
+- 文件路径验证 (PRE-001)
+- 代码规范预检查 (PRE-002)
+- 依赖合法性检查 (PRE-003)
+- 操作权限检查 (PRE-004)
+
+**PostToolUse (工具调用后)**:
+- ESLint 检查 (POST-001)
+- TypeScript 类型检查 (POST-002)
+- 测试覆盖检查 (POST-003)
+- 文档同步检查 (POST-004)
+- 安全漏洞检查 (POST-005)
+
+## 验收标准
+
+### 需求文档必须包含验收标准
+
+每个需求文档 (`feature-*.md`) 必须包含明确的验收标准，格式如下：
+
+```markdown
+## 验收标准
+
+- [ ] 功能点 1 描述
+- [ ] 功能点 2 描述
+- [ ] 功能点 3 描述
+```
+
+### 验收标准要求
+- **具体**: 明确描述功能行为
+- **可测试**: 可以通过测试验证
+- **完整**: 覆盖所有功能点
+- **可衡量**: 有明确的完成标准
+
+### 验收流程
+1. 功能实现完成后，自动检查验收标准
+2. 所有验收标准通过后，更新需求状态为 `done`
+3. 记录验收结果到开发日志
 
 ## 关键约束速查
 
@@ -71,9 +247,107 @@ CLAUDE.md                          ← 你在这里（主入口）
 - ❌ 禁止在模板中使用复杂表达式（抽取为 `computed`）
 - ❌ 禁止直接操作 DOM（使用 Vue 响应式绑定）
 
+## 当前状态
+
+### 项目阶段
+- **当前阶段**: 开发中
+- **已完成需求**: 2 个
+- **进行中**: 0 个
+- **待处理**: 0 个
+
+### 需求列表
+
+| 需求编号 | 需求名称 | 状态 | 优先级 |
+|----------|----------|------|--------|
+| REQ-P1-001 | 用户注册与登录 | ✅ done | P0 |
+| REQ-P1-002 | 小说上传与管理 | ✅ done | P0 |
+
+### 已完成
+
+#### 基础设施
+- [x] Rules & Spec 体系建立
+- [x] Harness 六层架构整合
+- [x] 前端项目脚手架（Vue 3 + Vite + Element Plus + Pinia + Vue Router）
+- [x] 后端项目搭建（FastAPI + SQLite + SQLModel）
+- [x] 前端：main.js → main.ts 迁移 + App.vue 改造
+- [x] 前端：Vite 代理配置 + @ 别名 + SCSS 支持
+- [x] Commitlint + Husky — git commit 自动校验格式
+- [x] Claude Code PreCommit Hook — 提交前自动 Prettier 格式化
+- [x] GitHub PR 模板
+
+#### 用户认证模块 (REQ-P1-001)
+- [x] 用户类型定义 `types/user.ts`
+- [x] API 服务层 `services/api.ts` + `services/auth.ts`
+- [x] 用户 Store `stores/user.ts`（Pinia Setup Store + token 持久化）
+- [x] 路由守卫 `router/guards.ts` + 路由更新
+- [x] 登录页 `LoginView.vue`（表单校验 + loading 状态）
+- [x] 注册页 `RegisterView.vue`（密码确认校验）
+- [x] 首页 `HomeView.vue`（登录/登出状态展示）
+- [x] 后端认证接口：register、login、profile（含 JWT）
+- [x] 后端 CORS + 配置模块
+- [x] 密码加密：bcrypt 哈希存储
+
+#### 小说上传模块 (REQ-P1-002)
+- [x] 小说类型定义 `types/novel.ts`
+- [x] 小说 API 服务 `services/novel.ts`
+- [x] 小说 Store `stores/novel.ts`
+- [x] 上传页 `UploadView.vue`（拖拽上传 + 进度条）
+- [x] 后端小说 API：upload、list、delete
+- [x] 后端 Novel 模型 + Schema
+- [x] 存储方案：本地文件系统 `uploads/novels/`
+- [x] 敏感操作二次确认（删除小说）
+
+### 待开始
+
+#### Phase 2 - 功能扩展
+- [ ] 前端：书房页（LibraryView.vue）— 当前为占位页面 (REQ-P2-001)
+- [ ] 前端：阅读器（ReaderView.vue）— 当前为占位页面 (REQ-P2-002)
+
+#### Phase 3 - 功能完善
+- [ ] 前端：国际化配置（vue-i18n）(REQ-P3-001)
+
+#### 工具链
+- [ ] 工具链：ESLint + Prettier + tsconfig.json
+
 ## 后端协作
 
 后端项目在 `backend_project/`，基于 Python FastAPI + SQLite。
 前端通过 `/api` 前缀调用后端接口，开发时 Vite 代理到 `http://localhost:8000`。
 
 API 规范详见：`技术选型.md`
+
+## 快速参考
+
+### 常用命令
+```bash
+# 启动前端开发服务器
+cd front_project && npm run dev
+
+# 启动后端服务
+cd backend_project && python -m uvicorn app.main:app --reload
+
+# 构建前端
+cd front_project && npm run build
+
+# 代码检查
+cd front_project && npm run lint
+
+# 代码格式化
+cd front_project && npm run format
+```
+
+### 重要文件
+- **总索引**: `docs/index.md`
+- **需求索引**: `docs/requirements/index.md`
+- **核心规范**: `docs/specs/core/`
+- **编码规范**: `docs/specs/core/coding-standards.md`
+- **架构规范**: `docs/specs/core/architecture.md`
+- **Hook 规则**: `docs/specs/core/hook-rules.md`
+
+### 文档更新
+- **最后更新**: 2026-06-25
+- **更新内容**: 整合 Harness 六层架构，重构文档结构
+
+---
+
+*本文件由 AI 维护，请勿手动编辑关键部分*
