@@ -121,8 +121,42 @@ Then  系统显示"文件大小不能超过5MB"错误提示
 - [ ] 安全考虑
 - [ ] 需要新增的依赖
 
-## 10. 参考 & 备注
+## 10. 后端实现
 
-- 相关 Rules: `.claude/rules/02_vue3_components.md`
-- 后端 API 文档: `技术选型.md`
-- 设计稿链接: [待补充]
+### 数据模型
+
+```python
+# 示例：用户模型
+class User(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    username: str = Field(unique=True, index=True)
+    password_hash: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+```
+
+### API 实现
+
+| 端点 | 文件 | 说明 |
+|------|------|------|
+| `POST /api/auth/register` | `backend_project/app/api/auth.py` | 用户注册 |
+| `POST /api/auth/login` | `backend_project/app/api/auth.py` | 用户登录 |
+
+### 数据库设计
+
+| 表名 | 字段 | 索引 |
+|------|------|------|
+| `users` | id, username, password_hash, created_at | username (unique) |
+| `novels` | id, user_id, title, file_path, file_size, created_at | user_id |
+
+### 依赖
+
+- `bcrypt`: 密码哈希
+- `python-jose`: JWT Token
+- `sqlmodel`: ORM
+
+## 11. 参考 & 备注
+
+- **核心规范**: `docs/specs/core/coding-standards.md`
+- **架构规范**: `docs/specs/core/architecture.md`
+- **Hook 规则**: `docs/specs/core/hook-rules.md`
+- **设计稿链接**: [待补充]

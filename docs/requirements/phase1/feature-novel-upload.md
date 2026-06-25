@@ -162,7 +162,49 @@ interface Novel {
 - [x] 后端权限校验：只能删除自己的小说
 - [x] 后端同时删除文件和数据库记录
 
-## 10. 参考 & 备注
+## 10. 后端实现
+
+### 数据模型
+
+```python
+# backend_project/app/models/novel.py
+class Novel(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    title: str
+    file_path: str  # 文件存储路径
+    file_size: int  # 文件大小（字节）
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+```
+
+### API 实现
+
+| 端点 | 文件 | 说明 | 状态 |
+|------|------|------|------|
+| `POST /api/upload/novel` | `backend_project/app/api/novel.py` | 上传小说 | ✅ 已实现 |
+| `GET /api/novels` | `backend_project/app/api/novel.py` | 获取小说列表 | ✅ 已实现 |
+| `DELETE /api/novels/{id}` | `backend_project/app/api/novel.py` | 删除小说 | ✅ 已实现 |
+
+### 数据库设计
+
+| 表名 | 字段 | 索引 |
+|------|------|------|
+| `novels` | id, user_id, title, file_path, file_size, created_at, updated_at | user_id |
+
+### 文件存储
+
+- **存储路径**: `backend_project/uploads/novels/`
+- **文件命名**: `{user_id}_{timestamp}_{filename}`
+- **大小限制**: 10MB
+- **格式限制**: 仅支持 .txt
+
+### 依赖
+
+- `python-multipart`: 文件上传（`pip install python-multipart`）
+- `sqlmodel`: ORM（`pip install sqlmodel`）
+
+## 11. 参考 & 备注
 
 - **核心规范**: `docs/specs/core/coding-standards.md`
 - **架构规范**: `docs/specs/core/architecture.md`
