@@ -236,7 +236,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 - **架构规范**: `docs/specs/core/architecture.md`
 - **Hook 规则**: `docs/specs/core/hook-rules.md`
 - **后端实现**: `backend_project/app/api/auth.py`（注册、登录、profile 全部实现）
-- **前端实现**: `front_project/src/views/LoginView.vue`、`RegisterView.vue`、`HomeView.vue`
-- **Store 实现**: `front_project/src/stores/user.ts`
+- **前端实现**: `frontend_project/src/views/LoginView.vue`、`RegisterView.vue`、`HomeView.vue`
+- **Store 实现**: `frontend_project/src/stores/user.ts`
 - **密码哈希**: 后端使用 bcrypt，前端使用 crypto-js SHA256
 - **JWT 配置**: `backend_project/app/config.py`

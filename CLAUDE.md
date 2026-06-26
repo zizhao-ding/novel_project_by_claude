@@ -321,19 +321,19 @@ API 规范详见：`技术选型.md`
 ### 常用命令
 ```bash
 # 启动前端开发服务器
-cd front_project && npm run dev
+cd frontend_project && npm run dev
 
 # 启动后端服务
 cd backend_project && python -m uvicorn app.main:app --reload
 
 # 构建前端
-cd front_project && npm run build
+cd frontend_project && npm run build
 
 # 代码检查
-cd front_project && npm run lint
+cd frontend_project && npm run lint
 
 # 代码格式化
-cd front_project && npm run format
+cd frontend_project && npm run format
 ```
 
 ### 重要文件

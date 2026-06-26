@@ -1,1 +1,1 @@
-cd front_project && npx --no-install prettier --check "src/**/*.{vue,ts,css}" 2>&1 | grep -v "warn\|Warning" >&2; true
+cd frontend_project && npx --no-install prettier --check "src/**/*.{vue,ts,css}" 2>&1 | grep -v "warn\|Warning" >&2; true

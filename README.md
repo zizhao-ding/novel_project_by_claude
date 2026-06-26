@@ -39,7 +39,7 @@ python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ### 2. 启动前端
 
 ```bash
-cd front_project
+cd frontend_project
 
 # 首次运行：安装依赖
 npm install
@@ -73,7 +73,7 @@ ngrok http 5173 --request-header-add "ngrok-skip-browser-warning:1"
 cd backend_project && python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 # 窗口2：前端
-cd front_project && npx vite --host
+cd frontend_project && npx vite --host
 
 # 窗口3：外网隧道（可选）
 ngrok http 5173 --request-header-add "ngrok-skip-browser-warning:1"
@@ -161,7 +161,7 @@ git push
 
 ```
 novel_project_by_claude/
-├── front_project/              # Vue 3 前端
+├── frontend_project/           # Vue 3 前端
 │   ├── src/views/              #   页面视图
 │   ├── src/stores/             #   Pinia 状态
 │   ├── src/services/           #   API 服务层

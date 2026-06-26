@@ -145,9 +145,36 @@ npm run type-check
 - 测试是否通过
 
 **检查方式**：
+
 ```bash
-npm run test:coverage
+# 前端测试
+cd frontend_project && npm run test
+
+# 后端测试
+cd backend_project && python -m pytest tests/ -v
 ```
+
+**测试文件组织**：
+
+```
+frontend_project/src/
+├── stores/
+│   └── __tests__/
+│       └── user.spec.ts      # Store 测试
+└── views/
+    └── __tests__/
+        └── LoginView.spec.ts # 组件测试
+
+backend_project/
+└── tests/
+    ├── conftest.py           # 测试配置
+    ├── test_auth.py          # 认证 API 测试
+    └── test_novel.py         # 小说 API 测试
+```
+
+**测试覆盖率要求**：
+- 前端：核心 Store 和组件测试覆盖率 ≥ 80%
+- 后端：API 端点测试覆盖率 ≥ 90%
 
 **处理方式**：
 - 测试覆盖率不足 → 警告，建议补充测试
