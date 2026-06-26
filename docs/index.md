@@ -41,20 +41,20 @@
 
 ```bash
 # 启动前端开发服务器
-cd front_project && npm run dev
+cd frontend_project && npm run dev
 
 # 启动后端服务
 cd backend_project && python -m uvicorn app.main:app --reload
 
 # 构建前端
-cd front_project && npm run build
+cd frontend_project && npm run build
 ```
 
 ## 项目结构
 
 ```
 novel_project_by_claude/
-├── front_project/          # 前端项目 (Vue 3 + Element Plus)
+├── frontend_project/       # 前端项目 (Vue 3 + Element Plus)
 ├── backend_project/        # 后端项目 (Python FastAPI + SQLite)
 ├── docs/                   # 📚 项目文档 (Harness 架构)
 │   ├── index.md            # 本文件 - 总索引

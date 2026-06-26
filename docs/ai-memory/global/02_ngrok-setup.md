@@ -41,7 +41,7 @@ ngrok http 5173 --request-header-add "ngrok-skip-browser-warning:1"
 
 ## Vite 配置
 
-`front_project/vite.config.ts` 中已添加：
+`frontend_project/vite.config.ts` 中已添加：
 ```ts
 server: {
   allowedHosts: ['localhost', '.ngrok-free.dev'],

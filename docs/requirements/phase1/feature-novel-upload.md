@@ -209,9 +209,9 @@ class Novel(SQLModel, table=True):
 - **核心规范**: `docs/specs/core/coding-standards.md`
 - **架构规范**: `docs/specs/core/architecture.md`
 - **Hook 规则**: `docs/specs/core/hook-rules.md`
-- **前端实现**: `front_project/src/views/UploadView.vue`
-- **Store 实现**: `front_project/src/stores/novel.ts`
-- **API 实现**: `front_project/src/services/novel.ts`
+- **前端实现**: `frontend_project/src/views/UploadView.vue`
+- **Store 实现**: `frontend_project/src/stores/novel.ts`
+- **API 实现**: `frontend_project/src/services/novel.ts`
 - **后端实现**: `backend_project/app/api/novel.py`
 - **数据模型**: `backend_project/app/models/novel.py`
 - **Schema**: `backend_project/app/schemas/novel.py`

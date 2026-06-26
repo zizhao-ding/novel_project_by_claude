@@ -11,7 +11,7 @@
 
 ```
 novel_project_by_claude/
-├── front_project/          # 前端 — Vue 3 + Vite + Element Plus
+├── frontend_project/       # 前端 — Vue 3 + Vite + Element Plus
 ├── backend_project/        # 后端 — Python FastAPI + SQLite
 ├── docs/                   # 📚 项目文档 (Harness 架构)
 │   ├── index.md            # 总索引
