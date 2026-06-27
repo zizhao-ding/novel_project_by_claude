@@ -19,11 +19,11 @@ export const useUserStore = defineStore('user', () => {
    * 用户注册
    * 注册成功后跳转登录页
    */
-  async function register(username: string, password: string) {
+  async function register(username: string, password: string, avatar: string = '#F5A623') {
     loading.value = true;
     error.value = null;
     try {
-      const res = await authApi.register({ username, password });
+      const res = await authApi.register({ username, password, avatar });
 
       if (res.code === 0) {
         ElMessage.success('注册成功，请登录');

@@ -9,6 +9,7 @@ class NovelResponse(BaseModel):
     user_id: int
     title: str
     file_size: int
+    category_id: Optional[int] = None
     created_at: datetime
 
     class Config:

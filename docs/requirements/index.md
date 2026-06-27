@@ -1,6 +1,6 @@
 # 📋 需求索引
 
-> **最后更新**: 2026-06-25
+> **最后更新**: 2026-06-27
 
 ## 需求状态说明
 
@@ -29,8 +29,9 @@
 
 | 编号 | 需求名称 | 状态 | 优先级 | 文件 |
 |------|----------|------|--------|------|
-| REQ-P2-001 | 书房页面 | 📝 pending | P1 | [phase2/feature-library.md](phase2/feature-library.md) |
+| REQ-P2-001 | 书房页面 | ✅ done | P1 | [phase2/feature-library.md](phase2/feature-library.md) |
 | REQ-P2-002 | 阅读器 | 📝 pending | P1 | [phase2/feature-reader.md](phase2/feature-reader.md) |
+| REQ-P2-003 | 用户页面 | ✅ done | P1 | [phase2/feature-user.md](phase2/feature-user.md) |
 
 ## Phase 3 - 功能完善
 

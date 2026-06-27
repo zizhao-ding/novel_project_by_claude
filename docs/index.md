@@ -1,6 +1,6 @@
 # 📚 小说阅读平台 - 项目总索引
 
-> **最后更新**: 2026-06-25
+> **最后更新**: 2026-06-27
 > **项目阶段**: 开发中
 
 ## 项目概述
@@ -110,9 +110,9 @@ novel_project_by_claude/
 
 ### 项目阶段
 - **当前阶段**: 开发中
-- **已完成需求**: 2 个
+- **已完成需求**: 3 个
 - **进行中**: 0 个
-- **待处理**: 0 个
+- **待处理**: 2 个
 
 ### 需求列表
 
@@ -120,6 +120,9 @@ novel_project_by_claude/
 |----------|----------|------|--------|
 | REQ-P1-001 | 用户注册与登录 | ✅ done | P0 |
 | REQ-P1-002 | 小说上传与管理 | ✅ done | P0 |
+| REQ-P2-001 | 书房页面 | ✅ done | P1 |
+| REQ-P2-002 | 阅读器 | 📝 pending | P1 |
+| REQ-P2-003 | 用户页面 | ✅ done | P1 |
 
 ### 已完成
 
@@ -134,32 +137,58 @@ novel_project_by_claude/
 - [x] Claude Code PreCommit Hook — 提交前自动 Prettier 格式化
 - [x] GitHub PR 模板
 
-#### 用户认证模块 (REQ-P1-001)
-- [x] 用户类型定义 `types/user.ts`
+#### 用户认证模块 (REQ-P1-001) ✅ done
+- [x] 用户类型定义 `types/user.ts`（含 role、avatar、AVATAR_PRESETS）
 - [x] API 服务层 `services/api.ts` + `services/auth.ts`
 - [x] 用户 Store `stores/user.ts`（Pinia Setup Store + token 持久化）
 - [x] 路由守卫 `router/guards.ts` + 路由更新
-- [x] 登录页 `LoginView.vue`（表单校验 + loading 状态）
-- [x] 注册页 `RegisterView.vue`（密码确认校验）
+- [x] 登录页 `LoginView.vue`（两栏清新风格 + 绿色渐变 + 漂浮书本）
+- [x] 注册页 `RegisterView.vue`（两栏风格 + 头像选择器 8 色）
 - [x] 首页 `HomeView.vue`（登录/登出状态展示）
-- [x] 后端认证接口：register、login、profile（含 JWT）
+- [x] 后端认证接口：register、login、profile（含 JWT + avatar）
 - [x] 后端 CORS + 配置模块
 - [x] 密码加密：bcrypt 哈希存储
 
-#### 小说上传模块 (REQ-P1-002)
+#### 小说上传模块 (REQ-P1-002) ✅ done（已重构）
 - [x] 小说类型定义 `types/novel.ts`
 - [x] 小说 API 服务 `services/novel.ts`
-- [x] 小说 Store `stores/novel.ts`
-- [x] 上传页 `UploadView.vue`（拖拽上传 + 进度条）
+- [x] 小说 Store `stores/novel.ts`（职责分离：确认弹窗在视图层）
+- [x] 上传页 `UploadView.vue`（统一顶部栏 + 卡片网格 + 加入书架）
 - [x] 后端小说 API：upload、list、delete
 - [x] 后端 Novel 模型 + Schema
 - [x] 存储方案：本地文件系统 `uploads/novels/`
-- [x] 敏感操作二次确认（删除小说）
+- [x] 敏感操作二次确认（删除小说含书名）
+- [x] 上传后一键加入书架
+
+#### 书房页面 (REQ-P2-001) ✅ done
+- [x] 长按检测 composable `composables/useLongPress.ts`
+- [x] 书房页 `LibraryView.vue`（书架网格 + 多选 + 分类 + 删除）
+- [x] 顶部栏：返回按钮 + 标题 + 用户头像
+- [x] 右侧分类栏（10% 宽度，支持新建分类，不同颜色区分）
+- [x] 分类筛选（点击分类筛选书籍）
+- [x] 长按/右键进入多选模式
+- [x] 批量删除（二次确认，从书架移除）
+- [x] 批量分类（弹窗选择，支持弹窗内新建）
+- [x] 后端：Category 模型 + CRUD API
+- [x] 后端：Bookshelf 模型 + 书架 API
+- [x] 后端：Novel 模型新增 category_id
+- [x] 后端：批量修改分类 API（修复路由冲突）
+- [x] 前端：Category Store + API 服务
+- [x] 前端：Bookshelf Store + API 服务
+- [x] 种子数据脚本（test 用户 + 6 本假数据）
+
+#### 用户页面 (REQ-P2-003) ✅ done
+- [x] 用户页面 `UserView.vue`（头像 + 用户名 + 角色 + 统计 + 菜单）
+- [x] 后端：User 模型新增 role 字段（admin / seed_member / member）
+- [x] 后端：用户统计接口 `/api/auth/user/stats`
+- [x] 后端：profile 接口返回 role
+- [x] 前端：User 类型增加 role + 统计类型
+- [x] 前端：auth API 增加 getUserStats
+- [x] 书房页头像点击跳转用户页
 
 ### 待开始
 
 #### Phase 2 - 功能扩展
-- [ ] 前端：书房页（LibraryView.vue）— 当前为占位页面 (REQ-P2-001)
 - [ ] 前端：阅读器（ReaderView.vue）— 当前为占位页面 (REQ-P2-002)
 
 #### Phase 3 - 功能完善
