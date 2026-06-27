@@ -6,6 +6,7 @@ from sqlmodel import Session, select
 
 from app.database import get_session
 from app.models.novel import Novel
+from app.models.category import Category
 from app.models.user import User
 from app.schemas.novel import (
     NovelResponse,
@@ -13,6 +14,7 @@ from app.schemas.novel import (
     NovelApiResponse,
     NovelListResponse,
 )
+from app.schemas.category import BatchCategoryRequest, BatchApiResponse
 from app.api.auth import get_current_user
 
 router = APIRouter(prefix="/api", tags=["小说"])
@@ -84,6 +86,7 @@ def upload_novel(
             user_id=novel.user_id,
             title=novel.title,
             file_size=novel.file_size,
+            category_id=novel.category_id,
             created_at=novel.created_at,
         ),
     )
@@ -109,12 +112,43 @@ def list_novels(
             user_id=n.user_id,
             title=n.title,
             file_size=n.file_size,
+            category_id=n.category_id,
             created_at=n.created_at,
         )
         for n in novels
     ]
 
     return NovelListResponse(code=0, message="获取成功", data=NovelListData(items=items, total=total))
+
+
+@router.put("/novels/batch-category", response_model=BatchApiResponse, summary="批量修改分类")
+def batch_update_category(
+    request: BatchCategoryRequest,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """批量修改小说的分类"""
+    if not request.novel_ids:
+        return BatchApiResponse(code=400, message="请选择要操作的小说")
+
+    # 验证分类存在（如果指定了分类）
+    if request.category_id is not None:
+        category = session.get(Category, request.category_id)
+        if not category or category.user_id != current_user.id:
+            return BatchApiResponse(code=400, message="分类不存在")
+
+    # 批量更新
+    updated = 0
+    for novel_id in request.novel_ids:
+        novel = session.get(Novel, novel_id)
+        if novel and novel.user_id == current_user.id:
+            novel.category_id = request.category_id
+            session.add(novel)
+            updated += 1
+
+    session.commit()
+
+    return BatchApiResponse(code=0, message=f"已更新 {updated} 本书籍", data={"updated": updated})
 
 
 @router.delete("/novels/{novel_id}", response_model=NovelApiResponse, summary="删除小说")

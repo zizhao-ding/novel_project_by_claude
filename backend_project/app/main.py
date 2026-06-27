@@ -5,6 +5,8 @@ from contextlib import asynccontextmanager
 from app.database import create_db_and_tables
 from app.api.auth import router as auth_router
 from app.api.novel import router as novel_router
+from app.api.category import router as category_router
+from app.api.bookshelf import router as bookshelf_router
 
 
 @asynccontextmanager
@@ -33,6 +35,8 @@ app.add_middleware(
 # 注册路由
 app.include_router(auth_router)
 app.include_router(novel_router)
+app.include_router(category_router)
+app.include_router(bookshelf_router)
 
 
 @app.get("/", tags=["健康检查"])

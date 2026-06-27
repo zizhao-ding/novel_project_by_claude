@@ -1,60 +1,51 @@
 # REQ-P1-001: 用户注册与登录
 
-> **状态**: ✅ 已完成
-> **优先级**: P0 核心
+> **状态**: ✅ done
+> **优先级**: P0
 > **创建日期**: 2026-06-25
-> **最后更新**: 2026-06-25
+> **最后更新**: 2026-06-27
 
 ## 1. 概述
 
-实现用户注册、登录、登出及登录状态持久化功能。这是整个应用的基础模块，所有需要用户身份的功能（上传、书签等）都依赖此模块。
+实现用户注册与登录功能，包括两栏清新风格页面、表单校验、JWT 认证、注册时头像选择等。采用前后端分离架构，前端使用 Vue 3 + Element Plus，后端使用 FastAPI + SQLModel + SQLite。
 
 ## 2. 用户故事
 
-- 作为 **新用户**，我想要 **注册账号**，以便 **使用平台的全部功能**
-- 作为 **已有账号用户**，我想要 **登录**，以便 **访问我的个人数据和藏书**
-- 作为 **登录用户**，我想要 **退出登录**，以便 **保护我的账号安全**
-- 作为 **用户**，我想要 **记住登录状态**，以便 **刷新页面后不需要重新登录**
+- 作为 **新用户**，我想要 **注册账号并选择头像**，以便 **个性化我的身份**
+- 作为 **已注册用户**，我想要 **登录系统**，以便 **访问需要认证的功能**
+- 作为 **已登录用户**，我想要 **保持登录状态**，以便 **避免重复登录**
+- 作为 **已登录用户**，我想要 **退出登录**，以便 **保护账号安全**
 
 ## 3. UI 布局
 
-### 登录页
+### 登录页 / 注册页（两栏布局）
+
 ```
-┌──────────────────────────────────────────┐
-│                                          │
-│         🎨 小说阅读平台 (Logo)            │
-│                                          │
-│  ┌────────────────────────────────────┐  │
-│  │  登录                              │  │
-│  │                                    │  │
-│  │  用户名: [________________]        │  │
-│  │  密码:   [________________]        │  │
-│  │                                    │  │
-│  │  [x] 记住我                        │  │
-│  │                                    │  │
-│  │  [      登  录      ]              │  │
-│  │                                    │  │
-│  │  没有账号？[立即注册]               │  │
-│  └────────────────────────────────────┘  │
-└──────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│  ┌──────────────┐    ┌──────────────────────────┐   │
+│  │   📖 Logo    │    │   欢迎回来 👋 / 创建账号✨ │   │
+│  │  小说阅读平台 │    │                          │   │
+│  │              │    │   用户名                  │   │
+│  │  发现好书，   │    │   密码                    │   │  ← 右侧表单
+│  │  沉浸阅读    │    │   [登录/注册]             │   │
+│  │              │    │   没有账号？立即注册       │   │
+│  │  📕📗📘📙   │    │                          │   │
+│  │  (漂浮动画)  │    │                          │   │
+│  └──────────────┘    └──────────────────────────┘   │
+│   ← 左侧品牌区（绿色渐变）→                           │
+└─────────────────────────────────────────────────────┘
 ```
 
-### 注册页
+### 注册页头像选择
+
 ```
-┌──────────────────────────────────────────┐
-│  ┌────────────────────────────────────┐  │
-│  │  注册                              │  │
-│  │                                    │  │
-│  │  用户名: [________________]        │  │
-│  │  邮箱:   [________________]        │  │
-│  │  密码:   [________________]        │  │
-│  │  确认密码: [______________]        │  │
-│  │                                    │  │
-│  │  [      注  册      ]              │  │
-│  │                                    │  │
-│  │  已有账号？[立即登录]               │  │
-│  └────────────────────────────────────┘  │
-└──────────────────────────────────────────┘
+选择头像:
+┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐
+│ 🟡 │ │ 💗 │ │ 💙 │ │ 🟢 │ │ 🔴 │ │ 💜 │ │ 🟡 │ │ 🟢 │
+│ A  │ │ A  │ │ A  │ │ A  │ │ A  │ │ A  │ │ A  │ │ A  │
+└────┘ └────┘ └────┘ └────┘ └────┘ └────┘ └────┘ └────┘
+  ✓ — 实时预览用户名首字母
 ```
 
 ## 4. 路由 & 页面
@@ -67,176 +58,128 @@
 ## 5. 组件树
 
 ```
-LoginView.vue
-├── ElCard                         # 登录卡片容器
-│   ├── ElForm                     # 登录表单
-│   │   ├── ElFormItem (用户名)
-│   │   │   └── ElInput (v-model, 校验: 必填)
-│   │   ├── ElFormItem (密码)
-│   │   │   └── ElInput (type="password", 校验: 必填, 长度≥6)
-│   │   ├── ElCheckbox (记住我)
-│   │   └── ElButton (type="primary", :loading, @click=handleLogin)
-│   └── 跳转链接 → /register
-
-RegisterView.vue
-├── ElCard                         # 注册卡片容器
-│   ├── ElForm                     # 注册表单
-│   │   ├── ElFormItem (用户名)
-│   │   ├── ElFormItem (邮箱)
-│   │   ├── ElFormItem (密码)
-│   │   ├── ElFormItem (确认密码)
-│   │   └── ElButton (type="primary", @click=handleRegister)
-│   └── 跳转链接 → /login
+LoginView.vue / RegisterView.vue
+├── brand-panel              # 左侧品牌区（绿色渐变 + Logo + 漂浮书本）
+│   ├── logo                 # 📖 + 小说阅读平台
+│   ├── slogan               # "发现好书，沉浸阅读"
+│   └── illustration         # 📕📗📘📙 漂浮动画
+└── form-panel               # 右侧表单区
+    ├── title                # "欢迎回来 👋" / "创建账号 ✨"
+    ├── el-form              # 表单
+    │   ├── avatar-picker    # 头像选择器（仅注册页）
+    │   ├── el-input 用户名
+    │   ├── el-input 密码
+    │   ├── el-input 确认密码（仅注册页）
+    │   └── el-button 提交
+    └── switch-link          # 切换登录/注册链接
 ```
 
 ## 6. 数据流 & Store 设计
 
 ### Store: `useUserStore`
 
-```
+```typescript
 State:
   user: User | null           # 当前用户信息
   token: string | null        # JWT Token（持久化到 localStorage）
-  isAuthenticated: boolean    # computed: !!token
+  loading: boolean            # 请求加载状态
+  error: string | null        # 错误信息
+
+Getters:
+  isAuthenticated: boolean    # 是否已登录
 
 Actions:
-  login(username, password)   # 登录 → 存储 token → 获取用户信息
-  register(data)              # 注册 → 自动登录
-  logout()                    # 清除 token → 清除用户信息 → 跳转登录页
-  fetchProfile()              # 获取当前用户信息
+  register(username, password, avatar)  # 注册
+  login(username, password)             # 登录
+  logout()                              # 退出登录（含确认弹窗）
+  fetchProfile()                        # 获取用户信息
 ```
 
-### Token 持久化
+### 数据结构
 
 ```typescript
-// token 存储在 localStorage，store 初始化时读取
-const token = ref(localStorage.getItem('token'));
+type UserRole = 'admin' | 'seed_member' | 'member';
 
-// 登录成功后写入
-localStorage.setItem('token', newToken);
+interface User {
+  id: number;
+  username: string;
+  role: UserRole;
+  avatar: string;       // 颜色值，如 "#F5A623"
+  created_at: string;
+}
 
-// 登出时清除
-localStorage.removeItem('token');
+const AVATAR_PRESETS = [
+  '#F5A623', '#F78DA7', '#8BD3DD', '#A8D8B9',
+  '#FF6B6B', '#C9B1FF', '#FFD93D', '#6BCB77',
+];
 ```
 
 ## 7. API 契约
 
 | 方法 | 路径 | 说明 | 请求体 | 响应 |
 |------|------|------|--------|------|
-| POST | `/api/auth/register` | 注册 | `{ username, email, password }` | `{ user: User, token: string }` |
-| POST | `/api/auth/login` | 登录 | `{ username, password }` | `{ user: User, token: string }` |
-| GET | `/api/auth/profile` | 获取用户信息 | Header: `Authorization: Bearer <token>` | `User` |
-
-> 后端已实现全部认证接口：`POST /api/auth/register`、`POST /api/auth/login`、`GET /api/auth/profile`。
+| POST | `/api/auth/register` | 用户注册 | `{ username, password, avatar }` | `{ code, message, data: User }` |
+| POST | `/api/auth/login` | 用户登录 | `{ username, password }` | `{ code, message, data: { token, User } }` |
+| GET | `/api/auth/profile` | 获取当前用户 | - | `{ code, message, data: User }` |
+| GET | `/api/auth/user/stats` | 用户统计 | - | `{ code, message, data: UserStats }` |
 
 ## 8. 验收标准
 
-### 场景 1: 用户注册成功
+### 注册
 
-- [x] 用户在注册页填写合法用户名、邮箱、密码并提交
-- [x] 系统调用注册 API
-- [x] 注册成功后自动跳转到首页
-- [x] 显示"注册成功"提示
-- [x] 导航栏显示用户名（已登录状态）
+- [x] 两栏布局：左侧品牌区（绿色渐变 + Logo + 漂浮书本），右侧表单区
+- [x] 注册页显示头像选择器（8 种预设颜色）
+- [x] 头像选择器实时预览用户名首字母
+- [x] 选中头像有绿色外框 + 勾选图标
+- [x] 用户名：3-100 个字符，必填
+- [x] 密码：至少 6 位，必填
+- [x] 确认密码：必须与密码一致
+- [x] 注册成功后跳转登录页
+- [x] 用户名已存在时返回错误提示
+- [x] 头像颜色保存到后端 User 模型
 
-### 场景 2: 注册表单校验
+### 登录
 
-- [x] 用户提交空表单时显示校验错误
-- [x] 两次密码不一致时显示校验错误
-- [x] 密码少于6位时显示校验错误
-- [x] 校验失败时不发起 API 请求
+- [x] 两栏布局，风格与注册页一致
+- [x] 登录表单：用户名 + 密码
+- [x] 登录成功后存储 JWT Token 到 localStorage
+- [x] 登录成功后跳转到 redirect 目标页或首页
+- [x] 用户名或密码错误时返回错误提示
+- [x] 支持 Enter 键提交
 
-### 场景 3: 用户登录成功
+### 全局
 
-- [x] 用户在登录页输入正确的用户名和密码并提交
-- [x] 系统调用登录 API
-- [x] 登录成功后跳转到首页（或 redirect 目标页）
-- [x] 显示"登录成功"提示
-- [x] token 写入 localStorage
-
-### 场景 4: 登录失败
-
-- [x] 用户输入错误的密码
-- [x] 显示"用户名或密码错误"提示
-- [x] 不跳转页面
-
-### 场景 5: 登录状态持久化
-
-- [x] 用户已登录（localStorage 中有有效 token）
-- [x] 刷新页面后自动读取 token 并获取用户信息
-- [x] 保持登录状态
-
-### 场景 6: 未登录访问受限页面
-
-- [x] 用户未登录时尝试访问 /library
-- [x] 自动跳转到 /login?redirect=/library
-- [x] 登录后自动跳转回 /library
+- [x] 路由守卫：未登录访问需认证页面时跳转登录页
+- [x] 退出登录二次确认
+- [x] Token 过期时自动清除登录状态
+- [x] 全局头像使用用户选择的颜色
 
 ## 9. 技术实现要点
 
-- [x] 表单校验使用 Element Plus Form 的 rules 属性
-- [x] 登录/注册按钮需 loading 状态防止重复提交
-- [x] Token 通过 Axios 请求拦截器自动附加
-- [x] 401 响应通过 Axios 响应拦截器统一处理（清除 token + 跳转登录）
-- [x] 密码在前端做一次 SHA256 哈希后再发送（使用 crypto-js）
-- [x] 路由守卫在 `router/guards.ts` 中实现
-- [x] 首页（HomeView）含登录/登出状态展示
-- [x] 后端登录 API（`POST /api/auth/login`）已实现
-- [x] 后端 profile API（`GET /api/auth/profile`）已实现
-- [x] 后端 JWT Token 签发和验证
-- [x] 后端密码 bcrypt 哈希存储
+### 前端
+- [x] 两栏布局（品牌区 + 表单区）
+- [x] 绿色系清新风格（#e8f5e9 → #81c784 渐变）
+- [x] 漂浮书本 CSS 动画（@keyframes float）
+- [x] Element Plus el-form 表单校验
+- [x] el-input 圆角样式覆盖（:deep）
+- [x] 头像选择器（AVATAR_PRESETS 颜色数组）
+- [x] JWT Token 持久化（localStorage）
+- [x] 路由守卫（router/guards.ts）
+- [x] Pinia Setup Store 模式
 
-## 10. 后端实现
+### 后端
+- [x] User 模型（含 role、avatar 字段）
+- [x] bcrypt 密码哈希
+- [x] JWT Token 生成与验证（python-jose）
+- [x] CORS 中间件
+- [x] 统一响应格式 `{ code, message, data }`
 
-### 数据模型
+## 10. 参考 & 备注
 
-```python
-# backend_project/app/models/user.py
-class User(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    username: str = Field(unique=True, index=True)
-    password: str  # 明文密码（仅用于传输）
-    password_hash: str  # bcrypt 哈希后的密码
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-```
-
-### API 实现
-
-| 端点 | 文件 | 说明 | 状态 |
-|------|------|------|------|
-| `POST /api/auth/register` | `backend_project/app/api/auth.py` | 用户注册 | ✅ 已实现 |
-| `POST /api/auth/login` | `backend_project/app/api/auth.py` | 用户登录（JWT） | ✅ 已实现 |
-| `GET /api/auth/profile` | `backend_project/app/api/auth.py` | 获取用户信息 | ✅ 已实现 |
-
-### 数据库设计
-
-| 表名 | 字段 | 索引 |
-|------|------|------|
-| `users` | id, username, password, password_hash, created_at, updated_at | username (unique) |
-
-### 依赖
-
-- `bcrypt`: 密码哈希（`pip install bcrypt`）
-- `python-jose`: JWT Token 签发和验证（`pip install python-jose`）
-- `sqlmodel`: ORM（`pip install sqlmodel`）
-
-### 配置
-
-```python
-# backend_project/app/config.py
-SECRET_KEY = "your-secret-key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-```
-
-## 11. 参考 & 备注
-
-- **核心规范**: `docs/specs/core/coding-standards.md`
-- **架构规范**: `docs/specs/core/architecture.md`
-- **Hook 规则**: `docs/specs/core/hook-rules.md`
-- **后端实现**: `backend_project/app/api/auth.py`（注册、登录、profile 全部实现）
-- **前端实现**: `frontend_project/src/views/LoginView.vue`、`RegisterView.vue`、`HomeView.vue`
+- **前端实现**: `frontend_project/src/views/LoginView.vue`, `RegisterView.vue`
 - **Store 实现**: `frontend_project/src/stores/user.ts`
-- **密码哈希**: 后端使用 bcrypt，前端使用 crypto-js SHA256
-- **JWT 配置**: `backend_project/app/config.py`
+- **API 实现**: `frontend_project/src/services/auth.ts`
+- **后端实现**: `backend_project/app/api/auth.py`
+- **数据模型**: `backend_project/app/models/user.py`
+- **Schema**: `backend_project/app/schemas/user.py`
+- **路由守卫**: `frontend_project/src/router/guards.ts`

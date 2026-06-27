@@ -12,5 +12,6 @@ class Novel(SQLModel, table=True):
     title: str = Field(max_length=255, description="小说标题")
     file_path: str = Field(max_length=500, description="文件存储路径")
     file_size: int = Field(default=0, description="文件大小（字节）")
+    category_id: Optional[int] = Field(default=None, foreign_key="categories.id", index=True, description="分类ID")
     created_at: datetime = Field(default_factory=datetime.utcnow, description="上传时间")
     updated_at: datetime = Field(default_factory=datetime.utcnow, description="更新时间")

@@ -8,6 +8,9 @@ from jose import JWTError, jwt
 
 from app.database import get_session
 from app.models.user import User
+from app.models.novel import Novel
+from app.models.bookshelf import Bookshelf
+from app.models.category import Category
 from app.schemas.user import (
     UserRegisterRequest,
     UserLoginRequest,
@@ -15,6 +18,8 @@ from app.schemas.user import (
     LoginData,
     AuthResponse,
     LoginResponse,
+    UserStatsResponse,
+    UserStatsData,
 )
 from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 import bcrypt
@@ -89,6 +94,7 @@ def register(request: UserRegisterRequest, session: Session = Depends(get_sessio
         username=request.username,
         password=request.password,
         password_hash=hash_password(request.password),
+        avatar=request.avatar,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow(),
     )
@@ -102,6 +108,8 @@ def register(request: UserRegisterRequest, session: Session = Depends(get_sessio
         data=UserResponse(
             id=user.id,
             username=user.username,
+            role=user.role,
+            avatar=user.avatar,
             created_at=user.created_at,
         ),
     )
@@ -130,6 +138,8 @@ def login(request: UserLoginRequest, session: Session = Depends(get_session)):
             user=UserResponse(
                 id=user.id,
                 username=user.username,
+                role=user.role,
+                avatar=user.avatar,
                 created_at=user.created_at,
             ),
         ),
@@ -147,6 +157,48 @@ def profile(
         data=UserResponse(
             id=current_user.id,
             username=current_user.username,
+            role=current_user.role,
+            avatar=current_user.avatar,
             created_at=current_user.created_at,
+        ),
+    )
+
+
+@router.get("/user/stats", response_model=UserStatsResponse, summary="用户统计")
+def user_stats(
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """获取当前用户的统计数据"""
+    from sqlmodel import func, select
+
+    # 上传的小说数
+    novel_count = session.exec(
+        select(func.count()).select_from(Novel).where(Novel.user_id == current_user.id)
+    ).one()
+
+    # 书架数
+    bookshelf_count = session.exec(
+        select(func.count()).select_from(Bookshelf).where(Bookshelf.user_id == current_user.id)
+    ).one()
+
+    # 分类数
+    category_count = session.exec(
+        select(func.count()).select_from(Category).where(Category.user_id == current_user.id)
+    ).one()
+
+    # 总上传大小
+    total_size = session.exec(
+        select(func.coalesce(func.sum(Novel.file_size), 0)).where(Novel.user_id == current_user.id)
+    ).one()
+
+    return UserStatsResponse(
+        code=0,
+        message="获取成功",
+        data=UserStatsData(
+            novel_count=novel_count,
+            bookshelf_count=bookshelf_count,
+            category_count=category_count,
+            total_size=total_size,
         ),
     )

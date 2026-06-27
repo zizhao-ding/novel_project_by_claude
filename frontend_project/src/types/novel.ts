@@ -3,6 +3,7 @@ export interface Novel {
   user_id: number;
   title: string;
   file_size: number;
+  category_id: number | null;
   created_at: string;
 }
 
