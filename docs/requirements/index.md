@@ -38,6 +38,7 @@
 | 编号 | 需求名称 | 状态 | 优先级 | 文件 |
 |------|----------|------|--------|------|
 | REQ-P3-001 | 国际化支持 | 📝 pending | P2 | [phase3/feature-i18n.md](phase3/feature-i18n.md) |
+| REQ-P3-002 | 首页发现页 + 搜索 | 📝 pending | P1 | [phase3/feature-home-search.md](phase3/feature-home-search.md) |
 
 ## 优先级说明
 
