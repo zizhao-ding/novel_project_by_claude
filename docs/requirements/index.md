@@ -41,6 +41,7 @@
 | REQ-P3-002 | 首页发现页 + 搜索 | ✅ done | P1 | [phase3/feature-home-search.md](phase3/feature-home-search.md) |
 | REQ-P3-003 | 使用帮助页 | ✅ done | P2 | [phase3/feature-help.md](phase3/feature-help.md) |
 | REQ-P3-004 | 权限系统（角色+可见性+角色管理） | ✅ done | P0 | [phase3/feature-permissions.md](phase3/feature-permissions.md) |
+| REQ-P3-005 | 小说详情页 | 📝 pending | P1 | [phase3/feature-novel-detail.md](phase3/feature-novel-detail.md) |
 
 ## 优先级说明
 
