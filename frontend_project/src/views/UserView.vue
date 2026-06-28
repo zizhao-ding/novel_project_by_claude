@@ -1,14 +1,6 @@
 <template>
   <div class="user-page">
-    <!-- 顶部导航栏 -->
-    <header class="user-page__header">
-      <div class="user-page__header-left">
-        <router-link to="/library" class="user-page__back">
-          <el-icon><ArrowLeft /></el-icon>
-        </router-link>
-        <h1 class="user-page__title">我的</h1>
-      </div>
-    </header>
+    <AppHeader show-back page-title="我的" />
 
     <!-- 用户信息卡片 -->
     <div class="user-page__profile">
@@ -92,7 +84,8 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { ElMessage } from 'element-plus';
-import { ArrowLeft, ArrowRight, Calendar, Collection, Upload, Lock, SwitchButton } from '@element-plus/icons-vue';
+import { ArrowRight, Calendar, Collection, Upload, Lock, SwitchButton } from '@element-plus/icons-vue';
+import AppHeader from '../components/AppHeader.vue';
 import { useUserStore } from '../stores/user';
 import { authApi } from '../services/auth';
 import type { UserStats, UserRole, ApiResponse } from '../types/user';

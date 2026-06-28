@@ -1,21 +1,6 @@
 <template>
   <div class="upload-page">
-    <!-- 顶部导航栏 -->
-    <header class="upload-page__header">
-      <div class="upload-page__header-left">
-        <router-link to="/library" class="upload-page__back">
-          <el-icon><ArrowLeft /></el-icon>
-        </router-link>
-        <h1 class="upload-page__title">上传小说</h1>
-      </div>
-      <div class="upload-page__header-right">
-        <router-link to="/user" class="upload-page__avatar-link">
-          <el-avatar :size="36" :src="userAvatar" :style="{ backgroundColor: avatarColor }" class="upload-page__avatar">
-            {{ avatarText }}
-          </el-avatar>
-        </router-link>
-      </div>
-    </header>
+    <AppHeader show-back page-title="上传小说" />
 
     <!-- 上传区域 -->
     <div class="upload-page__section">
@@ -84,28 +69,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { UploadFilled, ArrowLeft, Loading, Plus, Delete } from '@element-plus/icons-vue';
+import { UploadFilled, Loading, Plus, Delete } from '@element-plus/icons-vue';
+import AppHeader from '../components/AppHeader.vue';
 import type { UploadFile } from 'element-plus';
 import { useNovelStore } from '../stores/novel';
-import { useUserStore } from '../stores/user';
 import { bookshelfApi } from '../services/bookshelf';
 import type { Novel } from '../types/novel';
 
 const novelStore = useNovelStore();
-const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
-
-// ── 头像 ──
-const userAvatar = computed(() => '');
-const avatarText = computed(() => {
-  const name = user.value?.username || '读';
-  return name.charAt(0).toUpperCase();
-});
-const avatarColor = computed(() => user.value?.avatar || '#F5A623');
-
 // ── 封面颜色 ──
 const NOVEL_COLORS = ['#e74c3c', '#3498db', '#2c3e50', '#f39c12', '#27ae60', '#8e44ad', '#e67e22', '#1abc9c'];
 function getNovelColor(id: number): string {
