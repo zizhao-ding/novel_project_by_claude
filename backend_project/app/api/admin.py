@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select, func
 from typing import Optional
+from pydantic import BaseModel
+from datetime import datetime
 
 from app.database import get_session
 from app.models.user import User
@@ -35,10 +37,6 @@ class RoleUpdateRequest(BaseModel):
 class SimpleResponse(BaseModel):
     code: int = 0
     message: str = ""
-
-
-from pydantic import BaseModel
-from datetime import datetime
 
 
 def _format_user(u: User) -> UserItem:

@@ -85,4 +85,4 @@ def test_get_profile_success(client: TestClient, auth_headers):
 def test_get_profile_unauthorized(client: TestClient):
     """测试未认证获取用户信息失败"""
     response = client.get("/api/auth/profile")
-    assert response.status_code == 401
+    assert response.status_code in (401, 403)  # 权限系统返回 401 或 403

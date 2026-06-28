@@ -1,6 +1,6 @@
 # 📚 小说阅读平台 - 项目总索引
 
-> **最后更新**: 2026-06-27
+> **最后更新**: 2026-06-28
 > **项目阶段**: 开发中
 
 ## 项目概述
@@ -110,9 +110,9 @@ novel_project_by_claude/
 
 ### 项目阶段
 - **当前阶段**: 开发中
-- **已完成需求**: 3 个
+- **已完成需求**: 7 个
 - **进行中**: 0 个
-- **待处理**: 2 个
+- **待处理**: 1 个
 
 ### 需求列表
 
@@ -121,8 +121,12 @@ novel_project_by_claude/
 | REQ-P1-001 | 用户注册与登录 | ✅ done | P0 |
 | REQ-P1-002 | 小说上传与管理 | ✅ done | P0 |
 | REQ-P2-001 | 书房页面 | ✅ done | P1 |
-| REQ-P2-002 | 阅读器 | 📝 pending | P1 |
+| REQ-P2-002 | 阅读器 | ✅ done | P1 |
 | REQ-P2-003 | 用户页面 | ✅ done | P1 |
+| REQ-P3-001 | 国际化支持 | 📝 pending | P2 |
+| REQ-P3-002 | 首页发现页 + 搜索 | ✅ done | P1 |
+| REQ-P3-003 | 使用帮助页 | ✅ done | P2 |
+| REQ-P3-004 | 权限系统 | ✅ done | P0 |
 
 ### 已完成
 
@@ -186,16 +190,33 @@ novel_project_by_claude/
 - [x] 前端：auth API 增加 getUserStats
 - [x] 书房页头像点击跳转用户页
 
+#### 阅读器 (REQ-P2-002) ✅ done
+- [x] ReaderView.vue（侧边栏目录 + 正文区 + 底部工具栏）
+- [x] 三种阅读主题 + 字号调节 12-24px
+- [x] 阅读进度自动保存恢复
+- [x] services/reader.ts + stores/reader.ts
+- [x] 后端 ReadingProgress 模型
+
+#### 首页发现页 + 搜索 (REQ-P3-002) ✅ done
+- [x] 首页重写为内容发现页 + SearchView 搜索
+- [x] NovelCard 通用小说卡片 + AppHeader 全局顶栏
+- [x] 后端热门/最新/搜索 API
+
+#### 权限系统 (REQ-P3-004) ✅ done
+- [x] 三级角色 + 三级可见性
+- [x] usePermission composable + AdminUsersView 管理页
+- [x] 路由 role 守卫 + 后端权限依赖注入
+
+#### 帮助页 + 修改密码 (REQ-P3-003) ✅ done
+- [x] HelpView + NotFoundView + 修改密码弹窗
+
+#### 工具链 ✅
+- [x] ESLint v9 + TypeScript 严格模式 + Prettier
+
 ### 待开始
 
-#### Phase 2 - 功能扩展
-- [ ] 前端：阅读器（ReaderView.vue）— 当前为占位页面 (REQ-P2-002)
-
 #### Phase 3 - 功能完善
-- [ ] 前端：国际化配置（vue-i18n）(REQ-P3-001)
-
-#### 工具链
-- [ ] 工具链：ESLint + Prettier + tsconfig.json
+- [ ] 前端：国际化配置 vue-i18n (REQ-P3-001)
 
 ---
 
