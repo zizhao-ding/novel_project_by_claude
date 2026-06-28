@@ -39,6 +39,7 @@
 |------|----------|------|--------|------|
 | REQ-P3-001 | 国际化支持 | 📝 pending | P2 | [phase3/feature-i18n.md](phase3/feature-i18n.md) |
 | REQ-P3-002 | 首页发现页 + 搜索 | 📝 pending | P1 | [phase3/feature-home-search.md](phase3/feature-home-search.md) |
+| REQ-P3-003 | 使用帮助页 | 📝 pending | P2 | [phase3/feature-help.md](phase3/feature-help.md) |
 
 ## 优先级说明
 

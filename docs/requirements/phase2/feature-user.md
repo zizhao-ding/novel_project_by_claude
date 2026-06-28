@@ -1,9 +1,9 @@
 # REQ-P2-003: 用户页面
 
-> **状态**: ✅ done
+> **状态**: ✅ done（修改密码功能待补充）
 > **优先级**: P1
 > **创建日期**: 2026-06-27
-> **最后更新**: 2026-06-27
+> **最后更新**: 2026-06-28
 
 ## 1. 概述
 
@@ -15,6 +15,7 @@
 - 作为 **用户**，我想要 **看到我的角色标识**，以便 **确认我的身份权限**
 - 作为 **用户**，我想要 **查看阅读统计数据**，以便 **了解我的使用情况**
 - 作为 **用户**，我想要 **快速进入常用功能**，以便 **提高操作效率**
+- 作为 **用户**，我想要 **修改登录密码**，以便 **保障账号安全**
 
 ## 3. UI 布局
 
@@ -99,6 +100,18 @@ interface UserStats {
 |------|------|------|
 | `/api/auth/profile` | GET | 获取用户信息（含 role） |
 | `/api/auth/user/stats` | GET | 获取用户统计数据 |
+| `/api/auth/change-password` | POST | 修改密码（需登录） |
+
+### 修改密码接口
+```
+POST /api/auth/change-password
+Headers: Authorization: Bearer <token>
+Body: {
+  old_password: string,    // 旧密码
+  new_password: string     // 新密码（最少 6 位）
+}
+Response: { code: 0, message: "密码修改成功" }
+```
 
 ### 用户模型扩展
 
@@ -121,6 +134,7 @@ role: str = Field(default="member", max_length=20)
 - [x] 菜单项点击跳转对应页面
 - [x] 退出登录二次确认
 - [x] 底部显示版本信息
+- [ ] 修改密码功能可用（需输入旧密码 + 新密码，后端校验后更新）
 
 ## 9. 技术实现要点
 
@@ -130,6 +144,7 @@ role: str = Field(default="member", max_length=20)
 - [x] 新增 `/api/auth/user/stats` 统计接口
 - [x] 所有认证响应（register/login/profile）返回 role
 - [x] 种子数据脚本设置 test 用户为 admin
+- [ ] 新增 `/api/auth/change-password` 接口（校验旧密码 → bcrypt 哈希新密码 → 更新）
 
 ### 前端
 - [x] User 类型扩展（UserRole、ROLE_LABELS、ROLE_COLORS、UserStats）

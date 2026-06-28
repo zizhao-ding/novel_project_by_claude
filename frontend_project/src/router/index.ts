@@ -46,6 +46,12 @@ const routes: RouteRecordRaw[] = [
     props: true,
     meta: { title: '阅读' },
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../views/NotFoundView.vue'),
+    meta: { title: '页面不存在' },
+  },
 ];
 
 const router = createRouter({
