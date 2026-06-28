@@ -20,14 +20,7 @@
     <!-- 上传区域 -->
     <div class="upload-page__section">
       <el-card class="upload-page__upload-card" shadow="never">
-        <el-upload
-          class="upload-area"
-          drag
-          :auto-upload="false"
-          :show-file-list="false"
-          :on-change="handleFileChange"
-          accept=".txt"
-        >
+        <el-upload class="upload-area" drag :auto-upload="false" :show-file-list="false" :on-change="handleFileChange" accept=".txt">
           <el-icon class="upload-area__icon"><UploadFilled /></el-icon>
           <div class="upload-area__text">
             <em>点击或拖拽 TXT 文件到此处</em>
@@ -39,11 +32,7 @@
         <div v-if="novelStore.uploading" class="upload-progress">
           <el-icon class="is-loading"><Loading /></el-icon>
           <span>上传中 {{ novelStore.uploadProgress }}%</span>
-          <el-progress
-            :percentage="novelStore.uploadProgress"
-            :show-text="false"
-            :stroke-width="6"
-          />
+          <el-progress :percentage="novelStore.uploadProgress" :show-text="false" :stroke-width="6" />
         </div>
       </el-card>
     </div>
@@ -59,11 +48,7 @@
 
       <!-- 卡片网格 -->
       <div v-if="novelStore.novels.length > 0" class="upload-page__grid">
-        <div
-          v-for="novel in novelStore.novels"
-          :key="novel.id"
-          class="novel-card"
-        >
+        <div v-for="novel in novelStore.novels" :key="novel.id" class="novel-card">
           <!-- 封面 -->
           <div class="novel-card__cover" :style="{ backgroundColor: getNovelColor(novel.id) }">
             <span class="novel-card__cover-title">{{ novel.title.slice(0, 2) }}</span>
@@ -78,21 +63,11 @@
 
           <!-- 操作 -->
           <div class="novel-card__actions">
-            <el-button
-              type="primary"
-              text
-              size="small"
-              @click="handleAddToBookshelf(novel)"
-            >
+            <el-button type="primary" text size="small" @click="handleAddToBookshelf(novel)">
               <el-icon><Plus /></el-icon>
               加入书架
             </el-button>
-            <el-button
-              type="danger"
-              text
-              size="small"
-              @click="handleDelete(novel)"
-            >
+            <el-button type="danger" text size="small" @click="handleDelete(novel)">
               <el-icon><Delete /></el-icon>
               删除
             </el-button>
@@ -132,12 +107,9 @@ const avatarText = computed(() => {
 const avatarColor = computed(() => user.value?.avatar || '#F5A623');
 
 // ── 封面颜色 ──
-const NOVEL_COLORS = [
-  '#e74c3c', '#3498db', '#2c3e50', '#f39c12',
-  '#27ae60', '#8e44ad', '#e67e22', '#1abc9c',
-];
+const NOVEL_COLORS = ['#e74c3c', '#3498db', '#2c3e50', '#f39c12', '#27ae60', '#8e44ad', '#e67e22', '#1abc9c'];
 function getNovelColor(id: number): string {
-  return NOVEL_COLORS[id % NOVEL_COLORS.length];
+  return NOVEL_COLORS[id % NOVEL_COLORS.length] || '#3498db';
 }
 
 // ── 格式化 ──
@@ -173,7 +145,8 @@ function handleFileChange(file: UploadFile) {
 // ── 加入书架 ──
 async function handleAddToBookshelf(novel: Novel) {
   try {
-    const res = await bookshelfApi.add(novel.id);
+    const response = await bookshelfApi.add(novel.id);
+    const res = response as unknown as { code: number; message: string };
     if (res.code === 0) {
       ElMessage.success(`「${novel.title}」已加入书架`);
     } else {
@@ -187,15 +160,11 @@ async function handleAddToBookshelf(novel: Novel) {
 // ── 删除 ──
 async function handleDelete(novel: Novel) {
   try {
-    await ElMessageBox.confirm(
-      `确定要删除「${novel.title}」吗？删除后不可恢复。`,
-      '确认删除',
-      {
-        confirmButtonText: '确定删除',
-        cancelButtonText: '取消',
-        type: 'warning',
-      },
-    );
+    await ElMessageBox.confirm(`确定要删除「${novel.title}」吗？删除后不可恢复。`, '确认删除', {
+      confirmButtonText: '确定删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+    });
     novelStore.deleteNovel(novel.id);
   } catch {
     // 用户取消

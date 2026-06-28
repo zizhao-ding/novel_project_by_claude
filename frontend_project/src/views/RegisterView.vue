@@ -23,13 +23,7 @@
         <h2 class="auth-card__title">创建账号 ✨</h2>
         <p class="auth-card__subtitle">注册即刻开始你的阅读旅程</p>
 
-        <el-form
-          ref="formRef"
-          :model="formData"
-          :rules="formRules"
-          label-position="top"
-          @keyup.enter="handleRegister"
-        >
+        <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" @keyup.enter="handleRegister">
           <!-- 头像选择 -->
           <el-form-item label="选择头像">
             <div class="avatar-picker">
@@ -40,10 +34,7 @@
                 :class="{ 'avatar-picker__item--active': selectedAvatar === color }"
                 @click="selectedAvatar = color"
               >
-                <div
-                  class="avatar-picker__circle"
-                  :style="{ backgroundColor: color }"
-                >
+                <div class="avatar-picker__circle" :style="{ backgroundColor: color }">
                   {{ avatarPreviewText }}
                 </div>
                 <el-icon v-if="selectedAvatar === color" class="avatar-picker__check">
@@ -54,12 +45,7 @@
           </el-form-item>
 
           <el-form-item label="用户名" prop="username">
-            <el-input
-              v-model="formData.username"
-              placeholder="请输入用户名（3-100个字符）"
-              :prefix-icon="User"
-              size="large"
-            />
+            <el-input v-model="formData.username" placeholder="请输入用户名（3-100个字符）" :prefix-icon="User" size="large" />
           </el-form-item>
 
           <el-form-item label="密码" prop="password">
@@ -85,13 +71,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button
-              type="primary"
-              size="large"
-              :loading="userStore.loading"
-              class="auth-card__submit"
-              @click="handleRegister"
-            >
+            <el-button type="primary" size="large" :loading="userStore.loading" class="auth-card__submit" @click="handleRegister">
               注 册
             </el-button>
           </el-form-item>
@@ -249,10 +229,18 @@ async function handleRegister() {
     font-size: 48px;
     animation: float 3s ease-in-out infinite;
 
-    &--1 { animation-delay: 0s; }
-    &--2 { animation-delay: 0.5s; }
-    &--3 { animation-delay: 1s; }
-    &--4 { animation-delay: 1.5s; }
+    &--1 {
+      animation-delay: 0s;
+    }
+    &--2 {
+      animation-delay: 0.5s;
+    }
+    &--3 {
+      animation-delay: 1s;
+    }
+    &--4 {
+      animation-delay: 1.5s;
+    }
   }
 
   // ── 右侧表单区 ──
@@ -333,7 +321,9 @@ async function handleRegister() {
 
     &--active {
       .avatar-picker__circle {
-        box-shadow: 0 0 0 3px #fff, 0 0 0 5px #66bb6a;
+        box-shadow:
+          0 0 0 3px #fff,
+          0 0 0 5px #66bb6a;
       }
     }
   }
@@ -365,8 +355,13 @@ async function handleRegister() {
 
 // ── 漂浮动画 ──
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 // ── Element Plus 样式覆盖 ──

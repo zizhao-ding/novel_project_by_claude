@@ -18,12 +18,7 @@
         </el-avatar>
         <div class="user-page__user-info">
           <h2 class="user-page__username">{{ user?.username || '未登录' }}</h2>
-          <el-tag
-            :type="roleTagType"
-            size="small"
-            effect="dark"
-            class="user-page__role-tag"
-          >
+          <el-tag :type="roleTagType" size="small" effect="dark" class="user-page__role-tag">
             {{ roleLabel }}
           </el-tag>
         </div>
@@ -97,19 +92,11 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { ElMessage } from 'element-plus';
-import {
-  ArrowLeft,
-  ArrowRight,
-  Calendar,
-  Collection,
-  Upload,
-  Lock,
-  SwitchButton,
-} from '@element-plus/icons-vue';
+import { ArrowLeft, ArrowRight, Calendar, Collection, Upload, Lock, SwitchButton } from '@element-plus/icons-vue';
 import { useUserStore } from '../stores/user';
 import { authApi } from '../services/auth';
-import type { UserStats, UserRole } from '../types/user';
-import { ROLE_LABELS, ROLE_COLORS } from '../types/user';
+import type { UserStats, UserRole, ApiResponse } from '../types/user';
+import { ROLE_LABELS } from '../types/user';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -174,12 +161,13 @@ async function handleLogout() {
 // ── 初始化 ──
 onMounted(async () => {
   try {
-    const res = await authApi.getUserStats();
+    const response = await authApi.getUserStats();
+    const res = response as unknown as ApiResponse<UserStats>;
     if (res.code === 0 && res.data) {
       stats.value = res.data;
     }
-  } catch (err) {
-    console.error('获取用户统计失败:', err);
+  } catch {
+    // 获取用户统计失败，静默处理
   }
 });
 </script>

@@ -21,5 +21,5 @@ export const novelApi = {
       params: { page, page_size: pageSize },
     }),
 
-  delete: (id: number) => api.client.delete(`/novels/${id}`),
+  delete: (id: number) => api.client.delete<ApiResponse<void>>(`/novels/${id}`),
 };

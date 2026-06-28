@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import type { Novel } from '../types/novel';
+import type { Novel, NovelListData } from '../types/novel';
+import type { ApiResponse } from '../types/user';
 import { novelApi } from '../services/novel';
 
 export const useNovelStore = defineStore('novel', () => {
@@ -19,7 +20,8 @@ export const useNovelStore = defineStore('novel', () => {
       const onProgress = (pct: number) => {
         uploadProgress.value = pct;
       };
-      const res = await novelApi.upload(file, onProgress);
+      const response = await novelApi.upload(file, onProgress);
+      const res = response as unknown as ApiResponse<Novel>;
       if (res.code === 0 && res.data) {
         novels.value.unshift(res.data);
         ElMessage.success('上传成功');
@@ -29,7 +31,7 @@ export const useNovelStore = defineStore('novel', () => {
         ElMessage.error(res.message || '上传失败');
         return false;
       }
-    } catch (err) {
+    } catch {
       const msg = '上传失败，请检查网络连接';
       error.value = msg;
       ElMessage.error(msg);
@@ -44,7 +46,8 @@ export const useNovelStore = defineStore('novel', () => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await novelApi.getList();
+      const response = await novelApi.getList();
+      const res = response as unknown as { code: number; data: NovelListData };
       if (res.code === 0 && res.data) {
         novels.value = res.data.items;
       }

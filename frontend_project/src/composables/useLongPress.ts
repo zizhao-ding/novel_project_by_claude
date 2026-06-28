@@ -21,8 +21,11 @@ export function useLongPress(options: UseLongPressOptions = {}) {
     isLongPress.value = false;
 
     if (event instanceof TouchEvent) {
-      startX = event.touches[0].clientX;
-      startY = event.touches[0].clientY;
+      const touch = event.touches[0];
+      if (touch) {
+        startX = touch.clientX;
+        startY = touch.clientY;
+      }
     } else {
       startX = event.clientX;
       startY = event.clientY;
@@ -39,8 +42,11 @@ export function useLongPress(options: UseLongPressOptions = {}) {
     let currentX = 0;
     let currentY = 0;
     if (event instanceof TouchEvent) {
-      currentX = event.touches[0].clientX;
-      currentY = event.touches[0].clientY;
+      const touch = event.touches[0];
+      if (touch) {
+        currentX = touch.clientX;
+        currentY = touch.clientY;
+      }
     } else {
       currentX = event.clientX;
       currentY = event.clientY;
