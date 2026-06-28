@@ -25,10 +25,7 @@ export interface User {
 }
 
 // 预设头像颜色
-export const AVATAR_PRESETS = [
-  '#F5A623', '#F78DA7', '#8BD3DD', '#A8D8B9',
-  '#FF6B6B', '#C9B1FF', '#FFD93D', '#6BCB77',
-];
+export const AVATAR_PRESETS = ['#F5A623', '#F78DA7', '#8BD3DD', '#A8D8B9', '#FF6B6B', '#C9B1FF', '#FFD93D', '#6BCB77'];
 
 // 用户统计数据
 export interface UserStats {

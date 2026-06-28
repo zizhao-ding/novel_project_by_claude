@@ -23,12 +23,7 @@
         <!-- 统计栏 -->
         <div class="library-page__stats">
           <span>共 {{ filteredBooks.length }} 本书</span>
-          <el-button
-            v-if="bookshelfStore.books.length > 0"
-            text
-            type="primary"
-            @click="toggleSelectMode"
-          >
+          <el-button v-if="bookshelfStore.books.length > 0" text type="primary" @click="toggleSelectMode">
             {{ isSelectMode ? '取消选择' : '管理书架' }}
           </el-button>
         </div>
@@ -101,12 +96,8 @@
         <div class="library-page__sidebar-title">分类</div>
 
         <!-- 全部 -->
-        <div
-          class="category-item"
-          :class="{ 'category-item--active': !activeCategory }"
-          @click="activeCategory = null"
-        >
-          <span class="category-item__dot" style="background-color: #909399" />
+        <div class="category-item" :class="{ 'category-item--active': !activeCategory }" @click="activeCategory = null">
+          <span class="category-item__dot" style="background-color: #909399"></span>
           <span class="category-item__name">全部</span>
           <span class="category-item__count">{{ bookshelfStore.books.length }}</span>
         </div>
@@ -119,7 +110,7 @@
           :class="{ 'category-item--active': activeCategory === cat.id }"
           @click="activeCategory = activeCategory === cat.id ? null : cat.id"
         >
-          <span class="category-item__dot" :style="{ backgroundColor: cat.color }" />
+          <span class="category-item__dot" :style="{ backgroundColor: cat.color }"></span>
           <span class="category-item__name">{{ cat.name }}</span>
           <span class="category-item__count">{{ getCategoryCount(cat.id) }}</span>
         </div>
@@ -167,12 +158,7 @@
     </Transition>
 
     <!-- 分类弹窗 -->
-    <el-dialog
-      v-model="categoryDialogVisible"
-      title="移动到分类"
-      width="420px"
-      :close-on-click-modal="false"
-    >
+    <el-dialog v-model="categoryDialogVisible" title="移动到分类" width="420px" :close-on-click-modal="false">
       <div class="category-dialog">
         <!-- 现有分类 -->
         <div class="category-dialog__list">
@@ -183,7 +169,7 @@
             :class="{ 'category-dialog__item--active': selectedCategoryId === cat.id }"
             @click="selectedCategoryId = cat.id"
           >
-            <span class="category-dialog__dot" :style="{ backgroundColor: cat.color }" />
+            <span class="category-dialog__dot" :style="{ backgroundColor: cat.color }"></span>
             <span>{{ cat.name }}</span>
           </div>
 
@@ -193,29 +179,19 @@
             :class="{ 'category-dialog__item--active': selectedCategoryId === 0 }"
             @click="selectedCategoryId = 0"
           >
-            <span class="category-dialog__dot" style="background-color: #909399" />
+            <span class="category-dialog__dot" style="background-color: #909399"></span>
             <span>取消分类</span>
           </div>
         </div>
 
         <!-- 新建分类 -->
         <div class="category-dialog__create">
-          <el-input
-            v-model="dialogNewCategoryName"
-            size="small"
-            placeholder="新建分类名称"
-            @keyup.enter="handleDialogCreateCategory"
-          >
+          <el-input v-model="dialogNewCategoryName" size="small" placeholder="新建分类名称" @keyup.enter="handleDialogCreateCategory">
             <template #prefix>
               <el-icon><Plus /></el-icon>
             </template>
           </el-input>
-          <el-button
-            size="small"
-            type="primary"
-            :disabled="!dialogNewCategoryName.trim()"
-            @click="handleDialogCreateCategory"
-          >
+          <el-button size="small" type="primary" :disabled="!dialogNewCategoryName.trim()" @click="handleDialogCreateCategory">
             新建
           </el-button>
         </div>
@@ -234,14 +210,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import {
-  ArrowLeft,
-  CircleCheck,
-  Delete,
-  FolderOpened,
-  Plus,
-  Loading,
-} from '@element-plus/icons-vue';
+import { ArrowLeft, CircleCheck, Delete, FolderOpened, Plus, Loading } from '@element-plus/icons-vue';
 import { useUserStore } from '../stores/user';
 import { useCategoryStore } from '../stores/category';
 import { useBookshelfStore } from '../stores/bookshelf';
@@ -270,12 +239,9 @@ const avatarColor = computed(() => user.value?.avatar || '#F5A623');
 const activeCategory = ref<number | null>(null);
 
 // ── 封面颜色映射（根据 novel_id 稳定生成） ──
-const COVER_COLORS = [
-  '#e74c3c', '#3498db', '#2c3e50', '#f39c12',
-  '#27ae60', '#8e44ad', '#e67e22', '#1abc9c',
-];
+const COVER_COLORS = ['#e74c3c', '#3498db', '#2c3e50', '#f39c12', '#27ae60', '#8e44ad', '#e67e22', '#1abc9c'];
 function getBookColor(book: BookshelfNovel): string {
-  return COVER_COLORS[book.novel_id % COVER_COLORS.length];
+  return COVER_COLORS[book.novel_id % COVER_COLORS.length] || '#3498db';
 }
 
 // ── 格式化文件大小 ──
@@ -369,15 +335,11 @@ async function handleBatchDelete() {
   }
 
   try {
-    await ElMessageBox.confirm(
-      `确定要将选中的 ${count} 本书籍从书架移除吗？`,
-      '确认移除',
-      {
-        confirmButtonText: '确定移除',
-        cancelButtonText: '取消',
-        type: 'warning',
-      },
-    );
+    await ElMessageBox.confirm(`确定要将选中的 ${count} 本书籍从书架移除吗？`, '确认移除', {
+      confirmButtonText: '确定移除',
+      cancelButtonText: '取消',
+      type: 'warning',
+    });
 
     const novelIds = Array.from(selectedIds.value);
     const success = await bookshelfStore.batchRemoveBooks(novelIds);
@@ -442,10 +404,7 @@ async function confirmCategory() {
 
 // ── 初始化 ──
 onMounted(async () => {
-  await Promise.all([
-    bookshelfStore.fetchBooks(),
-    categoryStore.fetchCategories(),
-  ]);
+  await Promise.all([bookshelfStore.fetchBooks(), categoryStore.fetchCategories()]);
 });
 </script>
 

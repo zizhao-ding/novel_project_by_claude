@@ -3,7 +3,7 @@ import { useUserStore } from '../stores/user';
 
 export function setupRouterGuards(router: Router) {
   // 全局前置守卫：鉴权检查
-  router.beforeEach((to, from, next) => {
+  router.beforeEach((to, _from, next) => {
     const userStore = useUserStore();
     const requiresAuth = to.matched.some((r) => r.meta.requiresAuth);
 
@@ -21,6 +21,7 @@ export function setupRouterGuards(router: Router) {
   // 全局后置守卫：设置页面标题
   router.afterEach((to) => {
     const title = to.meta.title as string | undefined;
+    // eslint-disable-next-line no-restricted-globals -- 设置页面标题需要直接操作 document
     document.title = title ? `${title} | 小说阅读平台` : '小说阅读平台';
   });
 }

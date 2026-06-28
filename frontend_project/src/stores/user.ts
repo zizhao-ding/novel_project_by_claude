@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import type { User } from '../types/user';
+import type { User, ApiResponse, LoginResponse } from '../types/user';
 import { authApi } from '../services/auth';
 
 export const useUserStore = defineStore('user', () => {
@@ -23,7 +23,8 @@ export const useUserStore = defineStore('user', () => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await authApi.register({ username, password, avatar });
+      const response = await authApi.register({ username, password, avatar });
+      const res = response as unknown as ApiResponse<User>;
 
       if (res.code === 0) {
         ElMessage.success('注册成功，请登录');
@@ -51,7 +52,8 @@ export const useUserStore = defineStore('user', () => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await authApi.login({ username, password });
+      const response = await authApi.login({ username, password });
+      const res = response as unknown as ApiResponse<LoginResponse>;
 
       if (res.code === 0 && res.data) {
         token.value = res.data.token;
@@ -64,7 +66,7 @@ export const useUserStore = defineStore('user', () => {
         ElMessage.error(res.message || '用户名或密码错误');
         return false;
       }
-    } catch (err) {
+    } catch {
       const msg = '登录失败，请检查网络连接';
       error.value = msg;
       ElMessage.error(msg);
@@ -101,7 +103,8 @@ export const useUserStore = defineStore('user', () => {
   async function fetchProfile() {
     if (!token.value) return;
     try {
-      const res = await authApi.getProfile();
+      const response = await authApi.getProfile();
+      const res = response as unknown as ApiResponse<User>;
       if (res.code === 0 && res.data) {
         user.value = res.data;
       } else {

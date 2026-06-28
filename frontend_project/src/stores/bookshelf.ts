@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import type { BookshelfNovel } from '../types/bookshelf';
+import type { BookshelfNovel, BookshelfListData } from '../types/bookshelf';
 import { bookshelfApi } from '../services/bookshelf';
 
 export const useBookshelfStore = defineStore('bookshelf', () => {
@@ -15,12 +15,13 @@ export const useBookshelfStore = defineStore('bookshelf', () => {
   async function fetchBooks() {
     loading.value = true;
     try {
-      const res = await bookshelfApi.getList();
+      const response = await bookshelfApi.getList();
+      const res = response as unknown as { code: number; data: BookshelfListData };
       if (res.code === 0 && res.data) {
         books.value = res.data.items;
       }
-    } catch (err) {
-      console.error('获取书架列表失败:', err);
+    } catch {
+      // 获取书架列表失败，静默处理
     } finally {
       loading.value = false;
     }
@@ -29,7 +30,8 @@ export const useBookshelfStore = defineStore('bookshelf', () => {
   /** 从书架移除 */
   async function removeBook(novelId: number) {
     try {
-      const res = await bookshelfApi.remove(novelId);
+      const response = await bookshelfApi.remove(novelId);
+      const res = response as unknown as { code: number; message: string };
       if (res.code === 0) {
         books.value = books.value.filter((b) => b.novel_id !== novelId);
         ElMessage.success('已从书架移除');
@@ -44,7 +46,8 @@ export const useBookshelfStore = defineStore('bookshelf', () => {
   /** 批量从书架移除 */
   async function batchRemoveBooks(novelIds: number[]) {
     try {
-      const res = await bookshelfApi.batchRemove(novelIds);
+      const response = await bookshelfApi.batchRemove(novelIds);
+      const res = response as unknown as { code: number; message: string };
       if (res.code === 0) {
         books.value = books.value.filter((b) => !novelIds.includes(b.novel_id));
         ElMessage.success(res.message || '移除成功');

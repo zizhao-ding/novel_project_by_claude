@@ -3,8 +3,7 @@ import type { ApiResponse, User, UserStats, RegisterRequest, LoginRequest, Login
 
 export const authApi = {
   /** 用户注册 */
-  register: (data: RegisterRequest & { avatar?: string }) =>
-    api.client.post<ApiResponse<User>>('/auth/register', data),
+  register: (data: RegisterRequest & { avatar?: string }) => api.client.post<ApiResponse<User>>('/auth/register', data),
 
   /** 用户登录 */
   login: (data: LoginRequest) => api.client.post<ApiResponse<LoginResponse>>('/auth/login', data),

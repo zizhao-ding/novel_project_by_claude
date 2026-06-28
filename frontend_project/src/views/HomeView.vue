@@ -35,11 +35,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
-import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
 
 async function handleLogout() {
   const confirmed = await userStore.logout();
