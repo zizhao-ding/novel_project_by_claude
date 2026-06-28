@@ -13,4 +13,11 @@ export const authApi = {
 
   /** 获取用户统计数据 */
   getUserStats: () => api.client.get<{ code: number; data: UserStats }>('/auth/user/stats'),
+
+  /** 修改密码 */
+  changePassword: (oldPassword: string, newPassword: string) =>
+    api.client.post<{ code: number; message: string }>('/auth/change-password', {
+      old_password: oldPassword,
+      new_password: newPassword,
+    }),
 };

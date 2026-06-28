@@ -76,14 +76,34 @@
     <div class="user-page__footer">
       <span>小说阅读平台 v1.0.0</span>
     </div>
+
+    <!-- 修改密码弹窗 -->
+    <el-dialog v-model="passwordDialogVisible" title="修改密码" width="400px" :close-on-click-modal="false">
+      <el-form ref="passwordFormRef" :model="passwordForm" :rules="passwordRules" label-position="top">
+        <el-form-item label="旧密码" prop="oldPassword">
+          <el-input v-model="passwordForm.oldPassword" type="password" show-password placeholder="请输入旧密码" />
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input v-model="passwordForm.newPassword" type="password" show-password placeholder="请输入新密码（至少6位）" />
+        </el-form-item>
+        <el-form-item label="确认新密码" prop="confirmPassword">
+          <el-input v-model="passwordForm.confirmPassword" type="password" show-password placeholder="请再次输入新密码" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="passwordDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="changingPassword" @click="handleChangePasswordSubmit">确认修改</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { ElMessage } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import { ArrowRight, Calendar, Collection, Upload, Lock, SwitchButton } from '@element-plus/icons-vue';
 import AppHeader from '../components/AppHeader.vue';
 import { useUserStore } from '../stores/user';
@@ -139,9 +159,54 @@ function formatSize(bytes: number): string {
   return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
 }
 
-// ── 操作 ──
+// ── 修改密码 ──
+const passwordDialogVisible = ref(false);
+const changingPassword = ref(false);
+const passwordFormRef = ref<FormInstance>();
+const passwordForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' });
+
+const validateConfirmPassword = (_rule: unknown, value: string, callback: (err?: Error) => void) => {
+  if (value !== passwordForm.newPassword) {
+    callback(new Error('两次输入的密码不一致'));
+  } else {
+    callback();
+  }
+};
+
+const passwordRules: FormRules = {
+  oldPassword: [{ required: true, message: '请输入旧密码', trigger: 'blur' }],
+  newPassword: [{ required: true, min: 6, message: '新密码至少6位', trigger: 'blur' }],
+  confirmPassword: [
+    { required: true, message: '请确认新密码', trigger: 'blur' },
+    { validator: validateConfirmPassword, trigger: 'blur' },
+  ],
+};
+
 function handleChangePassword() {
-  ElMessage.info('修改密码功能开发中');
+  passwordForm.oldPassword = '';
+  passwordForm.newPassword = '';
+  passwordForm.confirmPassword = '';
+  passwordDialogVisible.value = true;
+}
+
+async function handleChangePasswordSubmit() {
+  const valid = await passwordFormRef.value?.validate().catch(() => false);
+  if (!valid) return;
+  changingPassword.value = true;
+  try {
+    const response = await authApi.changePassword(passwordForm.oldPassword, passwordForm.newPassword);
+    const res = response as unknown as { code: number; message: string };
+    if (res.code === 0) {
+      ElMessage.success('密码修改成功');
+      passwordDialogVisible.value = false;
+    } else {
+      ElMessage.error(res.message || '修改失败');
+    }
+  } catch {
+    ElMessage.error('修改密码失败');
+  } finally {
+    changingPassword.value = false;
+  }
 }
 
 async function handleLogout() {
