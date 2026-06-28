@@ -122,9 +122,7 @@ async function handleLogout() {
   &__inner {
     display: flex;
     align-items: center;
-    max-width: 1200px;
     width: 100%;
-    margin: 0 auto;
     padding: 0 24px;
     gap: 24px;
   }
@@ -132,7 +130,7 @@ async function handleLogout() {
   &__left {
     display: flex;
     align-items: center;
-    min-width: 180px;
+    flex-shrink: 0;
   }
 
   &__back-area {
@@ -172,8 +170,8 @@ async function handleLogout() {
     display: flex;
     align-items: center;
     gap: 16px;
-    min-width: 140px;
-    justify-content: flex-end;
+    flex-shrink: 0;
+    margin-left: auto;
   }
 
   &__nav-link {

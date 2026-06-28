@@ -26,6 +26,7 @@
             :file-size="novel.file_size"
             :subtitle="novel.bookshelf_count ? `${novel.bookshelf_count} 人收藏` : undefined"
             :color-index="idx"
+            :visibility="novel.visibility"
             @click="$router.push({ path: `/reader/${novel.id}`, query: { title: novel.title } })"
           />
         </div>
@@ -64,6 +65,7 @@
             :title="novel.title"
             :file-size="novel.file_size"
             :color-index="idx + 4"
+            :visibility="novel.visibility"
             @click="$router.push({ path: `/reader/${novel.id}`, query: { title: novel.title } })"
           />
         </div>

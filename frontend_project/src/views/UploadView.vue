@@ -19,6 +19,14 @@
           <span>上传中 {{ novelStore.uploadProgress }}%</span>
           <el-progress :percentage="novelStore.uploadProgress" :show-text="false" :stroke-width="6" />
         </div>
+
+        <!-- 可见性选择（种子成员及以上可见） -->
+        <div v-if="isSeedMember" class="upload-page__visibility">
+          <span class="upload-page__visibility-label">可见范围：</span>
+          <el-select v-model="uploadVisibility" size="small" style="width: 260px">
+            <el-option v-for="opt in VISIBILITY_OPTIONS" :key="opt.value" :label="opt.label" :value="opt.value" />
+          </el-select>
+        </div>
       </el-card>
     </div>
 
@@ -44,6 +52,27 @@
             <h3 class="novel-card__name">{{ novel.title }}</h3>
             <p class="novel-card__meta">{{ formatSize(novel.file_size) }}</p>
             <p class="novel-card__date">{{ formatDate(novel.created_at) }}</p>
+            <el-popover v-if="novel.visibility && isAdmin" placement="bottom" :width="180" trigger="click">
+              <template #reference>
+                <el-tag :type="getVisibilityType(novel.visibility)" size="small" class="novel-card__tag novel-card__tag--editable">
+                  {{ getVisibilityLabel(novel.visibility) }} ▾
+                </el-tag>
+              </template>
+              <div class="visibility-editor">
+                <div
+                  v-for="opt in VISIBILITY_OPTIONS"
+                  :key="opt.value"
+                  class="visibility-editor__item"
+                  :class="{ 'visibility-editor__item--active': novel.visibility === opt.value }"
+                  @click="handleChangeVisibility(novel, opt.value)"
+                >
+                  {{ opt.label }}
+                </div>
+              </div>
+            </el-popover>
+            <el-tag v-else-if="novel.visibility" :type="getVisibilityType(novel.visibility)" size="small" class="novel-card__tag">
+              {{ getVisibilityLabel(novel.visibility) }}
+            </el-tag>
           </div>
 
           <!-- 操作 -->
@@ -69,16 +98,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { UploadFilled, Loading, Plus, Delete } from '@element-plus/icons-vue';
 import AppHeader from '../components/AppHeader.vue';
 import type { UploadFile } from 'element-plus';
 import { useNovelStore } from '../stores/novel';
+import { usePermission } from '../composables/usePermission';
 import { bookshelfApi } from '../services/bookshelf';
+import { VISIBILITY_OPTIONS, VISIBILITY_LABELS } from '../types/novel';
 import type { Novel } from '../types/novel';
 
 const novelStore = useNovelStore();
+const { isSeedMember, isAdmin } = usePermission();
+const uploadVisibility = ref('public');
 // ── 封面颜色 ──
 const NOVEL_COLORS = ['#e74c3c', '#3498db', '#2c3e50', '#f39c12', '#27ae60', '#8e44ad', '#e67e22', '#1abc9c'];
 function getNovelColor(id: number): string {
@@ -97,6 +130,16 @@ function formatDate(dateStr: string): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
+function getVisibilityLabel(vis: string): string {
+  return VISIBILITY_LABELS[vis] || vis;
+}
+function getVisibilityType(vis: string): 'success' | 'warning' | 'danger' | 'info' {
+  if (vis === 'admin') return 'danger';
+  if (vis === 'seed') return 'warning';
+  if (vis === 'public') return 'success';
+  return 'info';
+}
+
 // ── 上传 ──
 function handleFileChange(file: UploadFile) {
   const raw = file.raw;
@@ -112,7 +155,7 @@ function handleFileChange(file: UploadFile) {
     return;
   }
 
-  novelStore.uploadNovel(raw);
+  novelStore.uploadNovel(raw, uploadVisibility.value);
 }
 
 // ── 加入书架 ──
@@ -128,6 +171,12 @@ async function handleAddToBookshelf(novel: Novel) {
   } catch {
     ElMessage.error('加入书架失败');
   }
+}
+
+// ── 修改可见性（管理员） ──
+async function handleChangeVisibility(novel: Novel, visibility: string) {
+  if (visibility === novel.visibility) return;
+  await novelStore.updateVisibility(novel.id, visibility);
 }
 
 // ── 删除 ──
@@ -153,6 +202,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .upload-page {
   min-height: 100vh;
+  padding-top: 56px;
   background: var(--el-bg-color-page, #f5f7fa);
 
   // ── 顶部栏 ──
@@ -223,6 +273,21 @@ onMounted(() => {
   &__upload-card {
     max-width: 800px;
     margin: 0 auto;
+  }
+
+  &__visibility {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--el-border-color-lighter);
+  }
+
+  &__visibility-label {
+    font-size: 13px;
+    color: var(--el-text-color-secondary);
+    white-space: nowrap;
   }
 
   &__section-header {
@@ -368,7 +433,40 @@ onMounted(() => {
   &__date {
     font-size: 12px;
     color: var(--el-text-color-placeholder);
-    margin: 0;
+    margin: 0 0 4px;
+  }
+
+  &__tag {
+    font-size: 11px;
+    transform: scale(0.85);
+    transform-origin: left center;
+
+    &--editable {
+      cursor: pointer;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.visibility-editor {
+  &__item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 4px;
+    transition: background 0.15s;
+
+    &:hover {
+      background: var(--el-fill-color-light);
+    }
+
+    &--active {
+      color: var(--el-color-primary);
+      font-weight: 600;
+      background: var(--el-color-primary-light-9);
+    }
   }
 
   &__actions {

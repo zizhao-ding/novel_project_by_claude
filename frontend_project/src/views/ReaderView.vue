@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 /* eslint-disable no-restricted-globals, no-undef */
-import { computed, onMounted, onBeforeUnmount } from 'vue';
+import { computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useReaderStore } from '../stores/reader';
@@ -99,21 +99,65 @@ const progressPercent = computed(() => {
   return Math.round(((readerStore.currentChapterIndex + 1) / readerStore.chapters.length) * 100);
 });
 
+// 防止滚动到底部重复触发翻章
+let autoNextLock = false;
+
+function scrollToTop() {
+  const el = document.querySelector('.reader-page__content');
+  if (el) {
+    el.scrollTop = 0;
+  }
+}
+
 function handleScroll() {
   const el = document.querySelector('.reader-page__content');
   if (!el) return;
   const { scrollTop, scrollHeight, clientHeight } = el;
+
+  // 保存阅读进度
   const pct = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100);
   if (pct > 0) {
     readerStore.saveProgress(readerStore.currentChapterIndex, Math.min(pct, 100));
   }
+
+  // 滚动到底部 → 自动翻下一章
+  const hasNext = readerStore.currentChapterIndex < readerStore.chapters.length - 1;
+  const isAtBottom = scrollHeight - (scrollTop + clientHeight) < 60;
+  if (isAtBottom && hasNext && !autoNextLock) {
+    autoNextLock = true;
+    readerStore.goToNext().finally(() => {
+      nextTick(() => {
+        scrollToTop();
+        autoNextLock = false;
+      });
+    });
+  }
 }
 
-onMounted(() => {
+// 切章时重置滚动位置
+watch(
+  () => readerStore.currentChapterIndex,
+  () => {
+    nextTick(() => scrollToTop());
+  },
+);
+
+// 加载小说（挂载时 + 路由参数变化时）
+function loadCurrentNovel() {
   const id = Number(route.params.id);
-  if (id) {
+  if (id && id !== readerStore.novelId) {
     readerStore.loadNovel(id, (route.query.title as string) || '');
+    scrollToTop();
   }
+}
+
+watch(
+  () => route.params.id,
+  () => loadCurrentNovel(),
+);
+
+onMounted(() => {
+  loadCurrentNovel();
   const contentEl = document.querySelector('.reader-page__content');
   if (contentEl) {
     contentEl.addEventListener('scroll', handleScroll, { passive: true });

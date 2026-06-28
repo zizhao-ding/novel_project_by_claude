@@ -12,7 +12,7 @@ export const useNovelStore = defineStore('novel', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  async function uploadNovel(file: File) {
+  async function uploadNovel(file: File, visibility = 'public') {
     uploading.value = true;
     uploadProgress.value = 0;
     error.value = null;
@@ -20,7 +20,7 @@ export const useNovelStore = defineStore('novel', () => {
       const onProgress = (pct: number) => {
         uploadProgress.value = pct;
       };
-      const response = await novelApi.upload(file, onProgress);
+      const response = await novelApi.upload(file, onProgress, visibility);
       const res = response as unknown as ApiResponse<Novel>;
       if (res.code === 0 && res.data) {
         novels.value.unshift(res.data);
@@ -69,5 +69,23 @@ export const useNovelStore = defineStore('novel', () => {
     }
   }
 
-  return { novels, uploading, uploadProgress, loading, error, uploadNovel, fetchNovels, deleteNovel };
+  /** 修改小说可见性（仅管理员） */
+  async function updateVisibility(id: number, visibility: string) {
+    try {
+      const response = await novelApi.updateVisibility(id, visibility);
+      const res = response as unknown as { code: number; message: string };
+      if (res.code === 0) {
+        // 本地更新
+        const novel = novels.value.find((n) => n.id === id);
+        if (novel) novel.visibility = visibility as Novel['visibility'];
+        ElMessage.success(res.message || '可见性修改成功');
+      } else {
+        ElMessage.error(res.message || '修改失败');
+      }
+    } catch {
+      ElMessage.error('修改可见性失败');
+    }
+  }
+
+  return { novels, uploading, uploadProgress, loading, error, uploadNovel, fetchNovels, deleteNovel, updateVisibility };
 });

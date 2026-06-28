@@ -233,6 +233,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .user-page {
   min-height: 100vh;
+  padding-top: 56px;
   background: var(--el-bg-color-page, #f5f7fa);
 
   // ── 顶部栏 ──

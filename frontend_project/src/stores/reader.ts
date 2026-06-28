@@ -38,8 +38,14 @@ export const useReaderStore = defineStore('reader', () => {
   const progress = ref<ReadingProgress | null>(null);
 
   async function loadNovel(id: number, title: string) {
+    // 切换小说时清空旧数据
     novelId.value = id;
     novelTitle.value = title;
+    chapters.value = [];
+    currentChapterIndex.value = 0;
+    currentContent.value = '';
+    currentTitle.value = '';
+    progress.value = null;
     loading.value = true;
     try {
       const response = await readerApi.getChapters(id);

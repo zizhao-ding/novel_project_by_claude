@@ -9,18 +9,21 @@
         <span v-if="subtitle">{{ subtitle }}</span>
         <span>{{ formatSize(fileSize) }}</span>
       </div>
+      <el-tag v-if="visibility" :type="visibilityType" size="small" class="novel-card__tag">{{ visibilityLabel }}</el-tag>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { VISIBILITY_LABELS } from '../types/novel';
 
 const props = defineProps<{
   title: string;
   fileSize: number;
   subtitle?: string;
   colorIndex?: number;
+  visibility?: string;
 }>();
 
 defineEmits<{ click: [] }>();
@@ -29,6 +32,12 @@ const COVER_COLORS = ['#e74c3c', '#3498db', '#2c3e50', '#f39c12', '#27ae60', '#8
 
 const coverColor = computed(() => COVER_COLORS[(props.colorIndex || 0) % COVER_COLORS.length]);
 const firstLetter = computed(() => props.title.charAt(0));
+const visibilityLabel = computed(() => VISIBILITY_LABELS[props.visibility || 'public']);
+const visibilityType = computed(() => {
+  if (props.visibility === 'admin') return 'danger';
+  if (props.visibility === 'seed') return 'warning';
+  return 'success';
+});
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return bytes + ' B';
@@ -85,6 +94,13 @@ function formatSize(bytes: number): string {
     color: var(--el-text-color-secondary);
     display: flex;
     gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  &__tag {
+    font-size: 11px;
+    transform: scale(0.85);
+    transform-origin: left center;
   }
 }
 </style>

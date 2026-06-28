@@ -387,6 +387,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .library-page {
   min-height: 100vh;
+  padding-top: 56px;
   background: var(--el-bg-color-page, #f5f7fa);
   display: flex;
   flex-direction: column;
