@@ -3,9 +3,10 @@ import type { ApiResponse } from '../types/user';
 import type { Novel, NovelListData } from '../types/novel';
 
 export const novelApi = {
-  upload: (file: File, onProgress?: (pct: number) => void) => {
+  upload: (file: File, onProgress?: (pct: number) => void, visibility = 'public') => {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('visibility', visibility);
     return api.client.post<ApiResponse<Novel>>('/upload/novel', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress: (e) => {
@@ -22,4 +23,7 @@ export const novelApi = {
     }),
 
   delete: (id: number) => api.client.delete<ApiResponse<void>>(`/novels/${id}`),
+
+  updateVisibility: (id: number, visibility: string) =>
+    api.client.put<ApiResponse<void>>(`/novels/${id}/visibility`, { visibility }),
 };

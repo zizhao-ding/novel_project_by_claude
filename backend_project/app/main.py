@@ -7,6 +7,7 @@ from app.api.auth import router as auth_router
 from app.api.novel import router as novel_router
 from app.api.category import router as category_router
 from app.api.bookshelf import router as bookshelf_router
+from app.api.admin import router as admin_router
 
 
 @asynccontextmanager
@@ -37,6 +38,7 @@ app.include_router(auth_router)
 app.include_router(novel_router)
 app.include_router(category_router)
 app.include_router(bookshelf_router)
+app.include_router(admin_router)
 
 
 @app.get("/", tags=["健康检查"])

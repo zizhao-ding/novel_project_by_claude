@@ -79,6 +79,31 @@ def get_current_user(
     return user
 
 
+ROLE_LEVEL = {"member": 0, "seed_member": 1, "admin": 2}
+
+
+def require_role(*allowed_roles: str):
+    """依赖工厂：仅允许指定角色访问"""
+
+    def checker(current_user: User = Depends(get_current_user)):
+        if current_user.role not in allowed_roles:
+            raise HTTPException(status_code=403, detail="权限不足")
+        return current_user
+
+    return checker
+
+
+def require_min_role(min_role: str):
+    """依赖工厂：角色等级不低于指定级别"""
+
+    def checker(current_user: User = Depends(get_current_user)):
+        if ROLE_LEVEL.get(current_user.role, 0) < ROLE_LEVEL.get(min_role, 0):
+            raise HTTPException(status_code=403, detail="权限不足")
+        return current_user
+
+    return checker
+
+
 # ── 认证接口 ──────────────────────────────────────────────
 
 @router.post("/register", response_model=AuthResponse, summary="用户注册")

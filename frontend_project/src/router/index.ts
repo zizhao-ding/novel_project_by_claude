@@ -40,11 +40,35 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, title: '我的' },
   },
   {
+    path: '/admin/users',
+    name: 'AdminUsers',
+    component: () => import('../views/AdminUsersView.vue'),
+    meta: { requiresAuth: true, requiredRole: 'admin', title: '用户管理' },
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('../views/SearchView.vue'),
+    meta: { title: '搜索' },
+  },
+  {
+    path: '/help',
+    name: 'Help',
+    component: () => import('../views/HelpView.vue'),
+    meta: { title: '帮助' },
+  },
+  {
     path: '/reader/:id',
     name: 'Reader',
     component: () => import('../views/ReaderView.vue'),
     props: true,
-    meta: { title: '阅读' },
+    meta: { requiresAuth: true, title: '阅读' },
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../views/NotFoundView.vue'),
+    meta: { title: '页面不存在' },
   },
 ];
 

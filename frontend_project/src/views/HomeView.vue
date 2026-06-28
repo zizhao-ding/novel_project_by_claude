@@ -1,109 +1,183 @@
 <template>
   <div class="home-page">
-    <header class="home-page__header">
-      <h1 class="home-page__logo">📖 小说阅读平台</h1>
-      <nav class="home-page__nav">
-        <template v-if="userStore.isAuthenticated">
-          <span class="home-page__username">{{ userStore.user?.username }}</span>
-          <el-button type="danger" text @click="handleLogout">退出登录</el-button>
-        </template>
-        <template v-else>
-          <router-link to="/login">
-            <el-button type="primary">登录</el-button>
-          </router-link>
-          <router-link to="/register">
-            <el-button text>注册</el-button>
-          </router-link>
-        </template>
-      </nav>
-    </header>
+    <AppHeader />
 
     <main class="home-page__main">
-      <div class="home-page__hero">
-        <h2>欢迎使用小说阅读平台</h2>
-        <p>上传你的 TXT 小说，随时随地在线阅读</p>
-        <div class="home-page__actions">
-          <router-link to="/library">
-            <el-button type="primary" size="large">进入书房</el-button>
-          </router-link>
-        </div>
+      <!-- 欢迎区（未登录） -->
+      <div v-if="!userStore.isAuthenticated" class="home-page__hero">
+        <h2>欢迎来到小说阅读平台</h2>
+        <p>海量 TXT 小说，随时随地在线阅读</p>
       </div>
+
+      <!-- 热门推荐 -->
+      <section class="home-page__section">
+        <h3 class="home-page__section-title">🔥 热门推荐</h3>
+        <div v-if="homeStore.loading" class="home-page__loading">
+          <el-icon class="is-loading" :size="32"><Loading /></el-icon>
+        </div>
+        <div v-else-if="homeStore.hotNovels.length === 0" class="home-page__empty">
+          <el-empty description="暂无推荐" />
+        </div>
+        <div v-else class="home-page__card-row">
+          <NovelCard
+            v-for="(novel, idx) in homeStore.hotNovels"
+            :key="novel.id"
+            :title="novel.title"
+            :file-size="novel.file_size"
+            :subtitle="novel.bookshelf_count ? `${novel.bookshelf_count} 人收藏` : undefined"
+            :color-index="idx"
+            :visibility="novel.visibility"
+            @click="$router.push({ path: `/reader/${novel.id}`, query: { title: novel.title } })"
+          />
+        </div>
+      </section>
+
+      <!-- 分类浏览 -->
+      <section class="home-page__section">
+        <h3 class="home-page__section-title">📂 分类浏览</h3>
+        <div class="home-page__tags">
+          <el-tag
+            v-for="cat in categories"
+            :key="cat"
+            class="home-page__tag"
+            size="large"
+            effect="plain"
+            @click="$router.push(`/library?category=${encodeURIComponent(cat)}`)"
+          >
+            {{ cat }}
+          </el-tag>
+        </div>
+      </section>
+
+      <!-- 最新上传 -->
+      <section class="home-page__section">
+        <h3 class="home-page__section-title">🆕 最近更新</h3>
+        <div v-if="homeStore.loading" class="home-page__loading">
+          <el-icon class="is-loading" :size="32"><Loading /></el-icon>
+        </div>
+        <div v-else-if="homeStore.latestNovels.length === 0" class="home-page__empty">
+          <el-empty description="暂无小说" />
+        </div>
+        <div v-else class="home-page__card-row">
+          <NovelCard
+            v-for="(novel, idx) in homeStore.latestNovels"
+            :key="novel.id"
+            :title="novel.title"
+            :file-size="novel.file_size"
+            :color-index="idx + 4"
+            :visibility="novel.visibility"
+            @click="$router.push({ path: `/reader/${novel.id}`, query: { title: novel.title } })"
+          />
+        </div>
+      </section>
+
+      <!-- 底部 -->
+      <footer class="home-page__footer">
+        <router-link to="/help">帮助中心</router-link>
+        <span>小说阅读平台 v1.0.0</span>
+      </footer>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+import { Loading } from '@element-plus/icons-vue';
 import { useUserStore } from '../stores/user';
+import { useHomeStore } from '../stores/home';
+import AppHeader from '../components/AppHeader.vue';
+import NovelCard from '../components/NovelCard.vue';
 
-const router = useRouter();
 const userStore = useUserStore();
+const homeStore = useHomeStore();
 
-async function handleLogout() {
-  const confirmed = await userStore.logout();
-  if (confirmed) {
-    router.push('/');
-  }
-}
+const categories = ['玄幻', '仙侠', '都市', '科幻', '历史', '游戏', '奇幻', '悬疑'];
+
+onMounted(() => {
+  homeStore.fetchAll();
+});
 </script>
 
 <style scoped lang="scss">
 .home-page {
   min-height: 100vh;
-  background: var(--el-bg-color);
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 32px;
-    background: #fff;
-    border-bottom: 1px solid var(--el-border-color-light);
-  }
-
-  &__logo {
-    font-size: 20px;
-    margin: 0;
-  }
-
-  &__nav {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  &__username {
-    font-size: 14px;
-    color: var(--el-text-color-secondary);
-  }
+  background: var(--el-bg-color-page, #f5f7fa);
+  padding-top: 56px;
 
   &__main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 65px);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
   }
 
   &__hero {
     text-align: center;
-
+    padding: 60px 0 40px;
     h2 {
-      font-size: 32px;
-      color: var(--el-text-color-primary);
-      margin-bottom: 12px;
+      font-size: 28px;
+      margin: 0 0 12px;
     }
-
     p {
       font-size: 16px;
       color: var(--el-text-color-secondary);
-      margin-bottom: 32px;
     }
   }
 
-  &__actions {
+  &__section {
+    margin-bottom: 36px;
+
+    &-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+  }
+
+  &__card-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__tags {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  &__tag {
+    cursor: pointer;
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  &__loading {
     display: flex;
     justify-content: center;
-    gap: 16px;
+    padding: 40px 0;
+    color: var(--el-text-color-placeholder);
+  }
+
+  &__empty {
+    padding: 20px 0;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 0 16px;
+    font-size: 13px;
+    color: var(--el-text-color-placeholder);
+    a {
+      color: var(--el-text-color-secondary);
+      text-decoration: none;
+      &:hover {
+        color: var(--el-color-primary);
+      }
+    }
   }
 }
 </style>

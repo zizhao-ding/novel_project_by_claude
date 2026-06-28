@@ -10,12 +10,25 @@ export function setupRouterGuards(router: Router) {
     if (requiresAuth && !userStore.isAuthenticated) {
       // 未登录，跳转登录页并记录目标路径
       next({ name: 'Login', query: { redirect: to.fullPath } });
-    } else if ((to.name === 'Login' || to.name === 'Register') && userStore.isAuthenticated) {
+      return;
+    }
+    if ((to.name === 'Login' || to.name === 'Register') && userStore.isAuthenticated) {
       // 已登录用户访问登录/注册页，重定向到首页
       next({ name: 'Home' });
-    } else {
-      next();
+      return;
     }
+    // 角色检查
+    const requiredRole = to.meta.requiredRole as string | undefined;
+    if (requiredRole) {
+      const ROLE_LEVEL: Record<string, number> = { member: 0, seed_member: 1, admin: 2 };
+      const userLevel = ROLE_LEVEL[userStore.user?.role || 'member'] ?? 0;
+      const requiredLevel = ROLE_LEVEL[requiredRole] ?? 0;
+      if (userLevel < requiredLevel) {
+        next({ name: 'Home' });
+        return;
+      }
+    }
+    next();
   });
 
   // 全局后置守卫：设置页面标题

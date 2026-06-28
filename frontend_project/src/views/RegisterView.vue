@@ -1,5 +1,6 @@
 <template>
   <div class="auth-page">
+    <AppHeader />
     <!-- 左侧品牌区 -->
     <div class="auth-page__brand">
       <div class="auth-page__brand-content">
@@ -92,6 +93,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import type { FormInstance, FormRules } from 'element-plus';
 import { User, Lock, CircleCheck } from '@element-plus/icons-vue';
+import AppHeader from '../components/AppHeader.vue';
 import { AVATAR_PRESETS } from '../types/user';
 
 const router = useRouter();

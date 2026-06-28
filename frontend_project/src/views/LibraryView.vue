@@ -1,21 +1,6 @@
 <template>
   <div class="library-page" :class="{ 'library-page--selecting': isSelectMode }">
-    <!-- 顶部导航栏 -->
-    <header class="library-page__header">
-      <div class="library-page__header-left">
-        <router-link to="/" class="library-page__back">
-          <el-icon><ArrowLeft /></el-icon>
-        </router-link>
-        <h1 class="library-page__title">我的书房</h1>
-      </div>
-      <div class="library-page__header-right">
-        <router-link to="/user" class="library-page__avatar-link">
-          <el-avatar :size="36" :src="userAvatar" :style="{ backgroundColor: avatarColor }" class="library-page__avatar">
-            {{ avatarText }}
-          </el-avatar>
-        </router-link>
-      </div>
-    </header>
+    <AppHeader show-back page-title="我的书房" />
 
     <div class="library-page__body">
       <!-- 主内容区 -->
@@ -208,10 +193,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { ArrowLeft, CircleCheck, Delete, FolderOpened, Plus, Loading } from '@element-plus/icons-vue';
-import { useUserStore } from '../stores/user';
+import { CircleCheck, Delete, FolderOpened, Plus, Loading } from '@element-plus/icons-vue';
+import AppHeader from '../components/AppHeader.vue';
 import { useCategoryStore } from '../stores/category';
 import { useBookshelfStore } from '../stores/bookshelf';
 import { useLongPress } from '../composables/useLongPress';
@@ -219,21 +203,13 @@ import type { BookshelfNovel } from '../types/bookshelf';
 
 // ── Store & Router ──
 const router = useRouter();
-const userStore = useUserStore();
 const categoryStore = useCategoryStore();
 const bookshelfStore = useBookshelfStore();
-const { user } = storeToRefs(userStore);
 
 // ── 长按 ──
 const { isLongPress, handlers: longPressHandlers } = useLongPress({ delay: 500 });
 
-// ── 用户头像 ──
-const userAvatar = computed(() => '');
-const avatarText = computed(() => {
-  const name = user.value?.username || '读';
-  return name.charAt(0).toUpperCase();
-});
-const avatarColor = computed(() => user.value?.avatar || '#F5A623');
+// ── 长按 ──
 
 // ── 当前激活的分类 ──
 const activeCategory = ref<number | null>(null);
@@ -411,6 +387,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .library-page {
   min-height: 100vh;
+  padding-top: 56px;
   background: var(--el-bg-color-page, #f5f7fa);
   display: flex;
   flex-direction: column;

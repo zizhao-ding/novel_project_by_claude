@@ -103,6 +103,11 @@
    - `architecture.md` - 架构规范
    - `hook-rules.md` - Hook 检查规则
 
+4. **读取记忆文件**: `docs/ai-memory/global/`
+   - `03_current-progress.md` - 当前进度
+   - `05_testing-debt.md` - 测试技术债务
+   - `06_architecture-decisions.md` - 架构决策记录
+
 ### 开发阶段
 
 ```mermaid
@@ -251,9 +256,9 @@ graph TD
 
 ### 项目阶段
 - **当前阶段**: 开发中
-- **已完成需求**: 3 个
+- **已完成需求**: 7 个
 - **进行中**: 0 个
-- **待处理**: 2 个
+- **待处理**: 1 个
 
 ### 需求列表
 
@@ -262,8 +267,12 @@ graph TD
 | REQ-P1-001 | 用户注册与登录 | ✅ done | P0 |
 | REQ-P1-002 | 小说上传与管理 | ✅ done | P0 |
 | REQ-P2-001 | 书房页面 | ✅ done | P1 |
-| REQ-P2-002 | 阅读器 | 📝 pending | P1 |
+| REQ-P2-002 | 阅读器 | ✅ done | P1 |
 | REQ-P2-003 | 用户页面 | ✅ done | P1 |
+| REQ-P3-001 | 国际化支持 | 📝 pending | P2 |
+| REQ-P3-002 | 首页发现页 + 搜索 | ✅ done | P1 |
+| REQ-P3-003 | 使用帮助页 | ✅ done | P2 |
+| REQ-P3-004 | 权限系统（角色+可见性+角色管理） | ✅ done | P0 |
 
 ### 已完成
 
@@ -327,16 +336,52 @@ graph TD
 - [x] 前端：auth API 增加 getUserStats
 - [x] 书房页头像点击跳转用户页
 
+#### 阅读器 (REQ-P2-002) ✅ done
+- [x] 阅读器 `ReaderView.vue`（侧边栏目录 + 正文区 + 底部工具栏）
+- [x] 三种阅读主题（日间/夜间/护眼）
+- [x] 字号调节 12-24px
+- [x] 章节导航 + 进度自动保存 + 恢复提示
+- [x] 前端：services/reader.ts + stores/reader.ts
+- [x] 后端：ReadingProgress 模型 + 阅读进度 API
+
+#### 首页发现页 + 搜索 (REQ-P3-002) ✅ done
+- [x] 首页 `HomeView.vue` 重写为内容发现页（热门/最新/分类）
+- [x] 搜索页 `SearchView.vue`
+- [x] 通用小说卡片 `NovelCard.vue`
+- [x] 后端：热门/最新/搜索 API（3 个端点）
+- [x] 前端：services/home.ts + services/search.ts + stores/home.ts
+
+#### 全局顶栏 AppHeader ✅
+- [x] `AppHeader.vue` 统一全局顶栏（返回区+搜索+头像悬浮卡片）
+- [x] 统一替换所有页面顶栏（Library/Upload/User/Login/Register 等）
+- [x] 头像 hover 悬浮卡片（头像/用户名/角色/快捷入口）
+
+#### 权限系统 (REQ-P3-004) ✅ done
+- [x] 三级角色体系（admin / seed_member / member）
+- [x] 小说可见性（public / seed / admin）— 纯可见性控制，书架不承担权限
+- [x] 前端：`usePermission.ts` 权限判断 composable
+- [x] 前端：`AdminUsersView.vue` 用户角色管理页
+- [x] 前端：路由 role 守卫（`meta.roles`）
+- [x] 后端：`require_role` / `require_min_role` 权限依赖函数
+- [x] 后端：`admin.py` 用户管理接口（列表/角色修改/搜索）
+- [x] 后端：小说下载接口 + 可见性过滤
+
+#### 帮助页 + 404 (REQ-P3-003) ✅ done
+- [x] `HelpView.vue` FAQ 折叠面板帮助页
+- [x] `NotFoundView.vue` 404 页面
+
+#### 修改密码功能 ✅
+- [x] 后端：`POST /api/auth/change-password` 接口
+- [x] 前端：UserView 修改密码弹窗（旧密码校验 + 新密码确认）
+
+#### 工具链 ✅
+- [x] ESLint v9 扁平配置 + TypeScript 严格模式 + Prettier
+- [x] tsconfig.json + eslint.config.js + TOOLING.md
+
 ### 待开始
 
-#### Phase 2 - 功能扩展
-- [ ] 前端：阅读器（ReaderView.vue）— 当前为占位页面 (REQ-P2-002)
-
 #### Phase 3 - 功能完善
-- [ ] 前端：国际化配置（vue-i18n）(REQ-P3-001)
-
-#### 工具链
-- [ ] 工具链：ESLint + Prettier + tsconfig.json
+- [ ] 前端：国际化配置 vue-i18n (REQ-P3-001)
 
 ## 后端协作
 
@@ -374,8 +419,8 @@ cd frontend_project && npm run format
 - **Hook 规则**: `docs/specs/core/hook-rules.md`
 
 ### 文档更新
-- **最后更新**: 2026-06-27
-- **更新内容**: 同步 Phase 2 全部需求（书房、用户页），登录/注册重构，头像系统
+- **最后更新**: 2026-06-28
+- **更新内容**: 同步全部 Phase 2+3 需求（阅读器、首页搜索、帮助页、权限系统、AppHeader、修改密码），工具链完成，补充记忆文件（测试债务、架构决策）
 
 ---
 徐亚
