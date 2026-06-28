@@ -30,7 +30,7 @@
 | 编号 | 需求名称 | 状态 | 优先级 | 文件 |
 |------|----------|------|--------|------|
 | REQ-P2-001 | 书房页面 | ✅ done | P1 | [phase2/feature-library.md](phase2/feature-library.md) |
-| REQ-P2-002 | 阅读器 | 📝 pending | P1 | [phase2/feature-reader.md](phase2/feature-reader.md) |
+| REQ-P2-002 | 阅读器 | ✅ done | P1 | [phase2/feature-reader.md](phase2/feature-reader.md) |
 | REQ-P2-003 | 用户页面 | ✅ done | P1 | [phase2/feature-user.md](phase2/feature-user.md) |
 
 ## Phase 3 - 功能完善
@@ -38,9 +38,9 @@
 | 编号 | 需求名称 | 状态 | 优先级 | 文件 |
 |------|----------|------|--------|------|
 | REQ-P3-001 | 国际化支持 | 📝 pending | P2 | [phase3/feature-i18n.md](phase3/feature-i18n.md) |
-| REQ-P3-002 | 首页发现页 + 搜索 | 📝 pending | P1 | [phase3/feature-home-search.md](phase3/feature-home-search.md) |
-| REQ-P3-003 | 使用帮助页 | 📝 pending | P2 | [phase3/feature-help.md](phase3/feature-help.md) |
-| REQ-P3-004 | 权限系统（角色+可见性+角色管理） | 📝 pending | P0 | [phase3/feature-permissions.md](phase3/feature-permissions.md) |
+| REQ-P3-002 | 首页发现页 + 搜索 | ✅ done | P1 | [phase3/feature-home-search.md](phase3/feature-home-search.md) |
+| REQ-P3-003 | 使用帮助页 | ✅ done | P2 | [phase3/feature-help.md](phase3/feature-help.md) |
+| REQ-P3-004 | 权限系统（角色+可见性+角色管理） | ✅ done | P0 | [phase3/feature-permissions.md](phase3/feature-permissions.md) |
 
 ## 优先级说明
 
