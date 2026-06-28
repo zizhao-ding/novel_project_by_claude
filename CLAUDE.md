@@ -262,7 +262,7 @@ graph TD
 | REQ-P1-001 | 用户注册与登录 | ✅ done | P0 |
 | REQ-P1-002 | 小说上传与管理 | ✅ done | P0 |
 | REQ-P2-001 | 书房页面 | ✅ done | P1 |
-| REQ-P2-002 | 阅读器 | 📝 pending | P1 |
+| REQ-P2-002 | 阅读器 | 🚧 developing | P1 |
 | REQ-P2-003 | 用户页面 | ✅ done | P1 |
 
 ### 已完成
