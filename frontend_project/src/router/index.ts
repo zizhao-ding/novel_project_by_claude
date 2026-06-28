@@ -40,6 +40,12 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, title: '我的' },
   },
   {
+    path: '/admin/users',
+    name: 'AdminUsers',
+    component: () => import('../views/AdminUsersView.vue'),
+    meta: { requiresAuth: true, requiredRole: 'admin', title: '用户管理' },
+  },
+  {
     path: '/reader/:id',
     name: 'Reader',
     component: () => import('../views/ReaderView.vue'),

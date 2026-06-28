@@ -7,6 +7,7 @@ from app.models.user import User  # noqa: F401
 from app.models.novel import Novel  # noqa: F401
 from app.models.category import Category  # noqa: F401
 from app.models.bookshelf import Bookshelf  # noqa: F401
+from app.models.reading_progress import ReadingProgress  # noqa: F401
 
 load_dotenv()
 
