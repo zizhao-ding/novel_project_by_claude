@@ -84,7 +84,7 @@ describe('useNovelStore', () => {
     it('加载中应设置 loading=true', async () => {
       const store = useNovelStore();
       vi.mocked(novelApi.getList).mockImplementationOnce(
-        () => new Promise(resolve => setTimeout(() => resolve({ code: 0, data: { items: [], total: 0 } }), 50))
+        () => new Promise((resolve) => setTimeout(() => resolve({ code: 0, data: { items: [], total: 0 } }), 50)),
       );
 
       const promise = store.fetchNovels();
@@ -142,7 +142,7 @@ describe('useNovelStore', () => {
     it('上传中应设置 uploading=true', async () => {
       const store = useNovelStore();
       vi.mocked(novelApi.upload).mockImplementationOnce(
-        () => new Promise(resolve => setTimeout(() => resolve({ code: 0, data: mockNovel }), 50))
+        () => new Promise((resolve) => setTimeout(() => resolve({ code: 0, data: mockNovel }), 50)),
       );
 
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });

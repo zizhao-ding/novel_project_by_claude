@@ -9,7 +9,7 @@
 
 - [x] 前端项目脚手架（Vue 3 + Vite + Element Plus + Pinia + Vue Router）
 - [x] 后端项目搭建（FastAPI + SQLite + SQLModel）
-- [x] Harness 六层架构整合
+- [x] Harness 六层架构整合（已演进为 AI Agent 原生六层架构，见 `docs/specs/core/ai-agent-architecture.md`）
 - [x] 前端：main.js → main.ts 迁移 + App.vue 改造为 router-view
 - [x] 前端：Vite 代理配置 + @ 别名 + SCSS 支持
 - [x] Commitlint + Husky — git commit 自动校验格式
@@ -126,9 +126,9 @@ _当前无进行中的需求_
 ## 已知技术债务
 
 - [ ] **测试覆盖率仍不足** — 前端 2 文件 13 用例（~15%），后端 3 文件 23 用例（~35%），详见 [[05_testing-debt]]
-- [x] Layer 2 规范层已补全 — `detail/` 3 文件 + `module/` 3 文件
-- [x] Layer 3 方案层已建立 — 5 条 ADR，详见 [[06_architecture-decisions]]
-- [x] Layer 5 审核层已建立 — `code-review.md` 审核清单 + 质量标准
+- [x] 规范层：`detail/` 3 文件 + `module/` 3 文件
+- [x] 记忆层：5 条 ADR，详见 [[06_architecture-decisions]]
+- [x] 工作流层 + 约束层：`code-review.md` 审核清单 + 质量标准
 - [ ] `docs/specs/detail/` 和 `docs/specs/module/` 目录已填充
 
 ## 技术笔记
@@ -146,4 +146,4 @@ _当前无进行中的需求_
 
 **How to apply:** 每完成一个功能后，更新本文件的 checkbox 状态。新会话启动时读取本文件了解当前进度。
 
-**相关记忆**: [[01_project-overview]] [[04_harness-architecture]] [[05_testing-debt]] [[06_architecture-decisions]]
+**相关记忆**: [[01_project-overview]] [[05_testing-debt]] [[06_architecture-decisions]]
