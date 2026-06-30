@@ -5,13 +5,21 @@
     <!-- 上传区域 -->
     <div class="upload-page__section">
       <el-card class="upload-page__upload-card" shadow="never">
-        <el-upload class="upload-area" drag :auto-upload="false" :show-file-list="false" :on-change="handleFileChange" accept=".txt">
-          <el-icon class="upload-area__icon"><UploadFilled /></el-icon>
-          <div class="upload-area__text">
+        <div
+          class="upload-dropzone"
+          :class="{ 'upload-dropzone--active': isDragging }"
+          @click="triggerFileInput"
+          @dragover.prevent="isDragging = true"
+          @dragleave.prevent="isDragging = false"
+          @drop.prevent="handleDrop"
+        >
+          <el-icon class="upload-dropzone__icon"><UploadFilled /></el-icon>
+          <div class="upload-dropzone__text">
             <em>点击或拖拽 TXT 文件到此处</em>
             <p>仅支持 .txt 格式，最大 10MB</p>
           </div>
-        </el-upload>
+        </div>
+        <input ref="fileInputRef" type="file" accept=".txt" style="display: none" @change="handleFileSelect" />
 
         <!-- 上传进度 -->
         <div v-if="novelStore.uploading" class="upload-progress">
@@ -102,7 +110,6 @@ import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { UploadFilled, Loading, Plus, Delete } from '@element-plus/icons-vue';
 import AppHeader from '../components/AppHeader.vue';
-import type { UploadFile } from 'element-plus';
 import { useNovelStore } from '../stores/novel';
 import { usePermission } from '../composables/usePermission';
 import { bookshelfApi } from '../services/bookshelf';
@@ -112,6 +119,37 @@ import type { Novel } from '../types/novel';
 const novelStore = useNovelStore();
 const { isSeedMember, isAdmin } = usePermission();
 const uploadVisibility = ref('public');
+const fileInputRef = ref<HTMLInputElement | null>(null);
+const isDragging = ref(false);
+
+// ── 文件选择 ──
+function triggerFileInput() {
+  fileInputRef.value?.click();
+}
+function handleFileSelect(e: Event) {
+  const input = e.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+  validateAndUpload(file);
+  input.value = '';
+}
+function handleDrop(e: DragEvent) {
+  isDragging.value = false;
+  const file = e.dataTransfer?.files?.[0];
+  if (!file) return;
+  validateAndUpload(file);
+}
+function validateAndUpload(file: File) {
+  if (!file.name.toLowerCase().endsWith('.txt')) {
+    ElMessage.error('仅支持 TXT 格式');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    ElMessage.error('文件大小不能超过 10MB');
+    return;
+  }
+  novelStore.uploadNovel(file, uploadVisibility.value);
+}
 // ── 封面颜色 ──
 const NOVEL_COLORS = ['#e74c3c', '#3498db', '#2c3e50', '#f39c12', '#27ae60', '#8e44ad', '#e67e22', '#1abc9c'];
 function getNovelColor(id: number): string {
@@ -138,24 +176,6 @@ function getVisibilityType(vis: string): 'success' | 'warning' | 'danger' | 'inf
   if (vis === 'seed') return 'warning';
   if (vis === 'public') return 'success';
   return 'info';
-}
-
-// ── 上传 ──
-function handleFileChange(file: UploadFile) {
-  const raw = file.raw;
-  if (!raw) return;
-
-  if (!raw.name.toLowerCase().endsWith('.txt')) {
-    ElMessage.error('仅支持 TXT 格式');
-    return;
-  }
-
-  if (raw.size > 10 * 1024 * 1024) {
-    ElMessage.error('文件大小不能超过 10MB');
-    return;
-  }
-
-  novelStore.uploadNovel(raw, uploadVisibility.value);
 }
 
 // ── 加入书架 ──
@@ -328,8 +348,25 @@ onMounted(() => {
 }
 
 // ── 上传区域 ──
-.upload-area {
+.upload-dropzone {
   width: 100%;
+  padding: 40px 20px;
+  text-align: center;
+  border: 2px dashed var(--el-border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+
+  &:hover {
+    border-color: var(--el-color-primary);
+    background: var(--el-color-primary-light-9);
+  }
+  &--active {
+    border-color: var(--el-color-primary);
+    background: var(--el-color-primary-light-8);
+  }
 
   &__icon {
     font-size: 48px;
