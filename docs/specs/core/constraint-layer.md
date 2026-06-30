@@ -84,7 +84,7 @@
 | C-028 | **提交信息必须符合 Conventional Commits** | `<type>(<scope>): <subject>` 格式 |
 | C-029 | **禁止 `git push --force` 到共享分支** | `main` 和集成分支 |
 | C-030 | **会话结束必须更新进度记录** | 更新 `03_current-progress.md` 和需求文档状态 |
-| C-031 | **模块/问题彻底解决后本地 commit** | 子步骤合并为一次，Conventional Commits 格式，不 push |
+| C-031 | **问题解决后主动询问是否 commit** | 由用户决定提不提交，不自动 commit |
 | C-032 | **Commit 前必须通过 Lint + TypeCheck** | 同 C-026/027，每次 commit 前自动执行 |
 
 ---
