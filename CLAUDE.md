@@ -89,7 +89,7 @@
 - ❌ 提交前必须通过 ESLint + TypeScript 检查
 - ❌ 禁止 `git push --force` 到共享分支
 - ❌ 会话结束必须更新进度记录
-- ❌ 每次问题解决后必须本地 commit（Conventional Commits 格式，不push）
+- ❌ 一个模块/问题彻底解决后本地 commit（连续小步骤合并，不每次对话都 commit）
 
 ---
 
@@ -265,7 +265,7 @@ cd frontend_project && npm run format   # Prettier
 ```
 需求分析 → 方案设计 → 代码实现 → 审核检查 → 验收完成
    │           │           │           │           │
-   │           │           │           │           └── git commit + 更新进度 + 沉淀记忆
+   │           │           │           │           └── 模块完成 → git commit + 更新进度 + 沉淀记忆
    │           │           │           └── Lint + TypeCheck + 对照约束层
    │           │           └── 遵循规范层 + 约束层实时检查
    │           └── 查阅记忆层 ADR + 设计方案
@@ -275,7 +275,7 @@ cd frontend_project && npm run format   # Prettier
 ### 快速修复流程
 
 ```
-定位问题 → 确认方案(不违反红线) → Edit 修改 → Lint/TypeCheck 验证 → git commit → 完成
+定位问题 → 确认方案(不违反红线) → Edit 修改 → Lint/TypeCheck 验证 → 模块完成时 git commit → 完成
 ```
 
 ### 代码审查流程
