@@ -19,7 +19,7 @@
             <p>仅支持 .txt 格式，最大 10MB</p>
           </div>
         </div>
-        <input ref="fileInput" type="file" accept=".txt" style="display: none" @change="handleFileSelect" />
+        <input ref="fileInputRef" type="file" accept=".txt" style="display: none" @change="handleFileSelect" />
 
         <!-- 上传进度 -->
         <div v-if="novelStore.uploading" class="upload-progress">
@@ -119,26 +119,27 @@ import type { Novel } from '../types/novel';
 const novelStore = useNovelStore();
 const { isSeedMember, isAdmin } = usePermission();
 const uploadVisibility = ref('public');
-const fileInput = ref();
+const fileInputRef = ref<HTMLInputElement | null>(null);
 const isDragging = ref(false);
 
 // ── 文件选择 ──
 function triggerFileInput() {
-  fileInput.value?.click();
+  fileInputRef.value?.click();
 }
-function handleFileSelect(e) {
-  const file = e.target?.files?.[0];
+function handleFileSelect(e: Event) {
+  const input = e.target as HTMLInputElement;
+  const file = input.files?.[0];
   if (!file) return;
   validateAndUpload(file);
-  e.target.value = '';
+  input.value = '';
 }
-function handleDrop(e) {
+function handleDrop(e: DragEvent) {
   isDragging.value = false;
   const file = e.dataTransfer?.files?.[0];
   if (!file) return;
   validateAndUpload(file);
 }
-function validateAndUpload(file) {
+function validateAndUpload(file: File) {
   if (!file.name.toLowerCase().endsWith('.txt')) {
     ElMessage.error('仅支持 TXT 格式');
     return;

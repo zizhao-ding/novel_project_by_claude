@@ -8,7 +8,6 @@ export const novelApi = {
     formData.append('file', file);
     formData.append('visibility', visibility);
     return api.client.post<ApiResponse<Novel>>('/upload/novel', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress: (e) => {
         if (e.total && onProgress) {
           onProgress(Math.round((e.loaded * 100) / e.total));
