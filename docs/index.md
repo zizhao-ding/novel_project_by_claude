@@ -1,41 +1,104 @@
-# 📚 小说阅读平台 - 项目总索引
+# 📚 小说阅读平台 — 项目总索引
 
-> **最后更新**: 2026-06-28
+> **最后更新**: 2026-06-30
 > **项目阶段**: 开发中
 
 ## 项目概述
 
 这是一个**小说在线阅读平台**，支持图片和文本小说（TXT格式）的上传及在线阅读，专注于 PC 端网页体验。
 
-采用 **Harness 六层架构**实现 AI 驱动开发。
+采用 **AI Agent 原生六层架构**实现 AI 驱动开发。架构总纲：`docs/specs/core/ai-agent-architecture.md`
 
-## 文档导航
+## AI Agent 六层架构
 
-### 📋 需求文档
-- **路径**: `docs/requirements/`
-- **索引**: [需求索引](requirements/index.md)
-- **说明**: 功能需求、验收标准、状态管理
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                      AI Agent 运行时治理                          │
+│                                                                   │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+│   │ 规范层    │  │ 上下文层  │  │ 约束层    │  │ 记忆层    │  │ 工具层    │  │ 工作流层  │
+│   │          │  │          │  │          │  │          │  │          │  │          │
+│   │ "代码    │  │ "现在    │  │ "绝对    │  │ "过去    │  │ "我能    │  │ "按什么  │
+│   │  应该    │  │  在做什么"│  │  不      │  │  学到    │  │  做什么" │  │  步骤做" │
+│   │  长什么样"│  │          │  │  能做的" │  │  了什么" │  │          │  │          │
+│   └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘
+│        │              │              │              │              │              │
+│        ▼              ▼              ▼              ▼              ▼              ▼
+│   编码规范        项目概述        TS强制         经验教训       Bash/Write    开发SOP
+│   架构规范        需求索引        Element+        架构决策        Agent/MCP     修复SOP
+│   样式规范        当前进度        禁止项          技术债务        权限边界      审查SOP
+│        │              │              │              │              │              │
+│        └──────────────┴──────────────┴──────────────┴──────────────┴──────────────┘
+│                                         │
+│                         六层同时生效，持续约束 AI 的每一个行为
+└──────────────────────────────────────────────────────────────────┘
+```
 
-### 📐 规范文档
-| 类型 | 路径 | 读取时机 | 说明 |
-|------|------|----------|------|
-| 核心规范 | `docs/specs/core/` | 启动时必读 | 编码规范、架构规范、Hook 规则、进度跟踪 |
-| 详细规范 | `docs/specs/detail/` | 按需读取 | 详细实现指南 |
-| 模块规范 | `docs/specs/module/` | 开发特定模块时 | 模块特定规范 |
+> 架构说明：这是从旧 Harness 六层架构（需求→规范→方案→执行→审核→验收）演进而来。
+> 旧 Harness 的内容已全部融合进新六层。映射关系详见架构总纲第6节。
 
-### 🧠 记忆文档
-- **全局经验**: `docs/ai-memory/global/` - 跨模块的经验积累
-- **模块经验**: `docs/ai-memory/module/` - 特定模块的经验
+## 文档导航（按六层组织）
+
+### 📐 规范层 — "代码应该长什么样"
+
+| 文档 | 路径 | 说明 |
+|------|------|------|
+| 编码规范 | `docs/specs/core/coding-standards.md` | 文件命名、Vue组件、TypeScript、SCSS/BEM、Git |
+| 架构规范 | `docs/specs/core/architecture.md` | Pinia Store、API服务、路由、错误处理 |
+| 详细规范 | `docs/specs/detail/` | 按需读取的详细实现指南 |
+| 模块规范 | `docs/specs/module/` | 特定模块的开发规范 |
+
+### 🔴 约束层 — "什么绝对不能做"
+
+| 文档 | 路径 | 说明 |
+|------|------|------|
+| 约束层定义 | `docs/specs/core/constraint-layer.md` | 30条硬性红线（C-001 ~ C-030） |
+| Hook 规则 | `docs/specs/core/hook-rules.md` | PreToolUse / PostToolUse 检查机制 |
+
+### 📋 上下文层 — "现在在做什么"
+
+| 文档 | 路径 | 说明 |
+|------|------|------|
+| 需求索引 | `docs/requirements/index.md` | 所有需求的状态追踪 |
+| 需求文档 | `docs/requirements/phase*/` | 各阶段需求详细文档 |
+| AI 运行时配置 | `CLAUDE.md` | 项目根目录，AI 会话入口 |
+
+### 🧠 记忆层 — "过去学到了什么"
+
+| 文档 | 路径 | 说明 |
+|------|------|------|
+| 当前进度 | `docs/ai-memory/global/03_current-progress.md` | 已完成/进行中/待开始 |
+| 架构决策 | `docs/ai-memory/global/06_architecture-decisions.md` | 5条 ADR 记录 |
+| 技术债务 | `docs/ai-memory/global/05_testing-debt.md` | 测试覆盖率改进计划 |
+| 模块经验 | `docs/ai-memory/module/` | 特定模块的经验 |
+
+### 🔧 工具层 — "能做什么"
+
+| 配置 | 路径 | 说明 |
+|------|------|------|
+| Claude Code 设置 | `.claude/settings.local.json` | 权限和 hooks 配置 |
+
+### 🔄 工作流层 — "按什么流程做"
+
+| 流程 | 入口 | 说明 |
+|------|------|------|
+| 会话启动流程 | `CLAUDE.md` → 工作流层 | 自动执行 |
+| 标准开发流程 | `CLAUDE.md` → 工作流层 | 需求→方案→执行→审核→验收 |
+| 快速修复流程 | `CLAUDE.md` → 工作流层 | 定位→确认→修改→验证 |
+| 代码审查流程 | `CLAUDE.md` → 工作流层 | 加载→对照→输出报告 |
+| 会话结束流程 | `CLAUDE.md` → 工作流层 | 更新进度→沉淀记忆 |
 
 ## 快速开始
 
 ### 新会话启动流程
 
-当开始新的开发会话时，**必须**按顺序执行：
+当开始新的开发会话时，**按顺序加载上下文**：
 
-1. **读取本文件**: `docs/index.md` - 了解项目整体结构
-2. **读取需求索引**: `docs/requirements/index.md` - 了解当前需求状态
-3. **读取核心规范**: `docs/specs/core/` - 编码规范、架构规范、Hook 规则
+1. **读取本文件** `docs/index.md` → 了解项目全貌
+2. **读取需求索引** `docs/requirements/index.md` → 了解需求状态
+3. **读取约束层** `docs/specs/core/constraint-layer.md` → 加载硬性红线
+4. **读取当前进度** `docs/ai-memory/global/03_current-progress.md`
+5. **读取架构决策** `docs/ai-memory/global/06_architecture-decisions.md`
 
 ### 常用命令
 
@@ -48,69 +111,40 @@ cd backend_project && python -m uvicorn app.main:app --reload
 
 # 构建前端
 cd frontend_project && npm run build
+
+# 代码检查
+cd frontend_project && npm run lint
+cd frontend_project && npm run type-check
 ```
 
 ## 项目结构
 
 ```
 novel_project_by_claude/
-├── frontend_project/       # 前端项目 (Vue 3 + Element Plus)
-├── backend_project/        # 后端项目 (Python FastAPI + SQLite)
-├── docs/                   # 📚 项目文档 (Harness 架构)
-│   ├── index.md            # 本文件 - 总索引
-│   ├── requirements/       # 需求文档
-│   ├── specs/              # 规范文档
-│   │   ├── core/           # 核心规范 (启动时必读)
-│   │   ├── detail/         # 详细规范
-│   │   └── module/         # 模块规范
-│   └── ai-memory/          # AI 记忆文档
-│       ├── global/         # 全局经验
-│       └── module/         # 模块经验
-└── .claude/                # Claude Code 配置
-    └── settings.local.json # 权限和 hooks 配置
-```
-
-## Harness 六层架构
-
-```
-┌─────────────────────────────────────────────┐
-│  Layer 6: 验收层 (Acceptance)                │
-│  - 自动化测试                                │
-│  - 验收标准检查                              │
-│  - 状态更新                                  │
-├─────────────────────────────────────────────┤
-│  Layer 5: 审核层 (Review)                    │
-│  - 代码审核                                  │
-│  - 规范检查                                  │
-│  - 质量评估                                  │
-├─────────────────────────────────────────────┤
-│  Layer 4: 执行层 (Execution)                 │
-│  - 代码生成                                  │
-│  - 文件操作                                  │
-│  - 构建部署                                  │
-├─────────────────────────────────────────────┤
-│  Layer 3: 方案层 (Solution)                  │
-│  - 技术方案                                  │
-│  - 架构设计                                  │
-│  - 接口定义                                  │
-├─────────────────────────────────────────────┤
-│  Layer 2: 规范层 (Specification)             │
-│  - 编码规范                                  │
-│  - 架构规范                                  │
-│  - Hook 规则                                 │
-├─────────────────────────────────────────────┤
-│  Layer 1: 需求层 (Requirement)               │
-│  - 需求文档                                  │
-│  - 验收标准                                  │
-│  - 状态管理                                  │
-└─────────────────────────────────────────────┘
+├── CLAUDE.md                          # 🎯 AI Agent 运行时入口
+├── frontend_project/                  # 前端项目 (Vue 3 + Element Plus)
+├── backend_project/                   # 后端项目 (Python FastAPI + SQLite)
+├── docs/                              # 📚 项目文档
+│   ├── index.md                       #   本文件 — 总索引
+│   ├── specs/core/                    #   规范层 + 约束层
+│   │   ├── ai-agent-architecture.md   #   架构总纲
+│   │   ├── coding-standards.md        #   编码规范
+│   │   ├── architecture.md            #   架构规范
+│   │   ├── constraint-layer.md        #   约束层定义
+│   │   └── hook-rules.md              #   Hook 规则
+│   ├── specs/detail/                  #   详细规范
+│   ├── specs/module/                  #   模块规范
+│   ├── requirements/                  #   需求文档
+│   └── ai-memory/                     #   记忆文档
+└── .claude/                           # Claude Code 配置
+    └── settings.local.json            #   权限和 hooks 配置
 ```
 
 ## 当前状态
 
 ### 项目阶段
 - **当前阶段**: 开发中
-- **已完成需求**: 8 个
+- **已完成需求**: 9 个
 - **进行中**: 0 个
 - **待处理**: 2 个
 
@@ -126,97 +160,42 @@ novel_project_by_claude/
 | REQ-P3-001 | 国际化支持 | 📝 pending | P2 |
 | REQ-P3-002 | 首页发现页 + 搜索 | ✅ done | P1 |
 | REQ-P3-003 | 使用帮助页 | ✅ done | P2 |
-| REQ-P3-004 | 权限系统 | ✅ done | P0 |
+| REQ-P3-004 | 权限系统（角色+可见性+角色管理） | ✅ done | P0 |
 | REQ-P3-005 | 小说详情页 | 📝 pending | P1 |
 
-### 已完成
+### 已完成摘要
 
 #### 基础设施
-- [x] Rules & Spec 体系建立
-- [x] Harness 六层架构整合
-- [x] 前端项目脚手架（Vue 3 + Vite + Element Plus + Pinia + Vue Router）
-- [x] 后端项目搭建（FastAPI + SQLite + SQLModel）
-- [x] 前端：main.js → main.ts 迁移 + App.vue 改造
-- [x] 前端：Vite 代理配置 + @ 别名 + SCSS 支持
-- [x] Commitlint + Husky — git commit 自动校验格式
-- [x] Claude Code PreCommit Hook — 提交前自动 Prettier 格式化
+- [x] 前端项目脚手架 + 后端项目搭建
+- [x] ESLint v9 + TypeScript 严格模式 + Prettier + Commitlint + Husky
 - [x] GitHub PR 模板
 
-#### 用户认证模块 (REQ-P1-001) ✅ done
-- [x] 用户类型定义 `types/user.ts`（含 role、avatar、AVATAR_PRESETS）
-- [x] API 服务层 `services/api.ts` + `services/auth.ts`
-- [x] 用户 Store `stores/user.ts`（Pinia Setup Store + token 持久化）
-- [x] 路由守卫 `router/guards.ts` + 路由更新
-- [x] 登录页 `LoginView.vue`（两栏清新风格 + 绿色渐变 + 漂浮书本）
-- [x] 注册页 `RegisterView.vue`（两栏风格 + 头像选择器 8 色）
-- [x] 首页 `HomeView.vue`（登录/登出状态展示）
-- [x] 后端认证接口：register、login、profile（含 JWT + avatar）
-- [x] 后端 CORS + 配置模块
-- [x] 密码加密：bcrypt 哈希存储
+#### 用户认证 (REQ-P1-001) ✅
+- [x] 登录/注册/个人信息 + JWT + bcrypt + 路由守卫 + 修改密码
 
-#### 小说上传模块 (REQ-P1-002) ✅ done（已重构）
-- [x] 小说类型定义 `types/novel.ts`
-- [x] 小说 API 服务 `services/novel.ts`
-- [x] 小说 Store `stores/novel.ts`（职责分离：确认弹窗在视图层）
-- [x] 上传页 `UploadView.vue`（统一顶部栏 + 卡片网格 + 加入书架）
-- [x] 后端小说 API：upload、list、delete
-- [x] 后端 Novel 模型 + Schema
-- [x] 存储方案：本地文件系统 `uploads/novels/`
-- [x] 敏感操作二次确认（删除小说含书名）
-- [x] 上传后一键加入书架
+#### 小说上传 (REQ-P1-002) ✅
+- [x] 上传/列表/删除 + 一键加入书架 + 二次确认
 
-#### 书房页面 (REQ-P2-001) ✅ done
-- [x] 长按检测 composable `composables/useLongPress.ts`
-- [x] 书房页 `LibraryView.vue`（书架网格 + 多选 + 分类 + 删除）
-- [x] 顶部栏：返回按钮 + 标题 + 用户头像
-- [x] 右侧分类栏（10% 宽度，支持新建分类，不同颜色区分）
-- [x] 分类筛选（点击分类筛选书籍）
-- [x] 长按/右键进入多选模式
-- [x] 批量删除（二次确认，从书架移除）
-- [x] 批量分类（弹窗选择，支持弹窗内新建）
-- [x] 后端：Category 模型 + CRUD API
-- [x] 后端：Bookshelf 模型 + 书架 API
-- [x] 后端：Novel 模型新增 category_id
-- [x] 后端：批量修改分类 API（修复路由冲突）
-- [x] 前端：Category Store + API 服务
-- [x] 前端：Bookshelf Store + API 服务
-- [x] 种子数据脚本（test 用户 + 6 本假数据）
+#### 书房 (REQ-P2-001) ✅
+- [x] 书架网格 + 分类系统 + 多选/批量操作 + 种子数据
 
-#### 用户页面 (REQ-P2-003) ✅ done
-- [x] 用户页面 `UserView.vue`（头像 + 用户名 + 角色 + 统计 + 菜单）
-- [x] 后端：User 模型新增 role 字段（admin / seed_member / member）
-- [x] 后端：用户统计接口 `/api/auth/user/stats`
-- [x] 后端：profile 接口返回 role
-- [x] 前端：User 类型增加 role + 统计类型
-- [x] 前端：auth API 增加 getUserStats
-- [x] 书房页头像点击跳转用户页
+#### 阅读器 (REQ-P2-002) ✅
+- [x] 三主题 + 字号调节 + 进度持久化 + 章节导航
 
-#### 阅读器 (REQ-P2-002) ✅ done
-- [x] ReaderView.vue（侧边栏目录 + 正文区 + 底部工具栏）
-- [x] 三种阅读主题 + 字号调节 12-24px
-- [x] 阅读进度自动保存恢复
-- [x] services/reader.ts + stores/reader.ts
-- [x] 后端 ReadingProgress 模型
+#### 用户页 (REQ-P2-003) ✅
+- [x] 用户信息 + 角色标签 + 统计数据 + 修改密码弹窗
 
-#### 首页发现页 + 搜索 (REQ-P3-002) ✅ done
-- [x] 首页重写为内容发现页 + SearchView 搜索
-- [x] NovelCard 通用小说卡片 + AppHeader 全局顶栏
-- [x] 后端热门/最新/搜索 API
+#### 首页 + 搜索 (REQ-P3-002) ✅
+- [x] 内容发现页 + 搜索页 + NovelCard 通用卡片 + AppHeader 全局顶栏
 
-#### 权限系统 (REQ-P3-004) ✅ done
-- [x] 三级角色 + 三级可见性
-- [x] usePermission composable + AdminUsersView 管理页
-- [x] 路由 role 守卫 + 后端权限依赖注入
+#### 权限系统 (REQ-P3-004) ✅
+- [x] 三级角色 + 三级可见性 + usePermission + 用户管理页 + 后端权限注入
 
-#### 帮助页 + 修改密码 (REQ-P3-003) ✅ done
-- [x] HelpView + NotFoundView + 修改密码弹窗
-
-#### 工具链 ✅
-- [x] ESLint v9 + TypeScript 严格模式 + Prettier
+#### 帮助页 (REQ-P3-003) ✅
+- [x] FAQ 折叠面板 + 404 页面
 
 ### 待开始
 
-#### Phase 3 - 功能完善
 - [ ] 前端：国际化配置 vue-i18n (REQ-P3-001)
 - [ ] 小说详情页 (REQ-P3-005)
 

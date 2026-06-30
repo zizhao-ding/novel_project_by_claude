@@ -24,6 +24,5 @@ export const novelApi = {
 
   delete: (id: number) => api.client.delete<ApiResponse<void>>(`/novels/${id}`),
 
-  updateVisibility: (id: number, visibility: string) =>
-    api.client.put<ApiResponse<void>>(`/novels/${id}/visibility`, { visibility }),
+  updateVisibility: (id: number, visibility: string) => api.client.put<ApiResponse<void>>(`/novels/${id}/visibility`, { visibility }),
 };

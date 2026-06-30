@@ -172,7 +172,7 @@ novel_project_by_claude/
 │   ├── app/models/             #   数据模型
 │   ├── app/schemas/            #   Pydantic 模型
 │   └── .env                    #   环境变量
-├── docs/                       # 📚 项目文档 (Harness 架构)
+├── docs/                       # 📚 项目文档 (AI Agent 六层架构)
 │   ├── index.md                #   总索引
 │   ├── requirements/           #   需求文档
 │   ├── specs/core/             #   核心规范
@@ -196,7 +196,7 @@ novel_project_by_claude/
 
 ## 💾 查看 Memory 进度记录
 
-项目使用 Harness 六层架构的文档体系记录开发进度，跨对话持久化。
+项目使用 AI Agent 原生六层架构的文档体系记录开发进度，跨对话持久化。架构总纲：`docs/specs/core/ai-agent-architecture.md`
 
 **快速打开**：
 
@@ -204,4 +204,4 @@ novel_project_by_claude/
 open /Users/peiwending/Desktop/novel_project_by_claude/docs/ai-memory/global
 ```
 
-文件按创建时间编号：`01_project-overview.md` `02_ngrok-setup.md` `03_current-progress.md` `04_harness-architecture.md`
+文件按创建时间编号：`01_project-overview.md` `02_ngrok-setup.md` `03_current-progress.md` `04_harness-architecture.md`（已演进为 `ai-agent-architecture.md`）`05_testing-debt.md` `06_architecture-decisions.md`

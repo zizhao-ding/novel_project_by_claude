@@ -14,9 +14,12 @@
 | Rules | `.claude/rules/` | 11个文件 | 按领域拆分（01-11），每个 ≤104行 |
 | Specs | `spec/` | 模板+示例 | 功能需求与验收标准 |
 
-### 阶段二：Harness 六层架构（2026-06-25）
+### 阶段二：Harness 六层架构（2026-06-25）⚠️ 已演进
 
-整合 Harness 六层架构，建立标准化的 AI 驱动开发流程：
+整合 Harness 六层架构，建立标准化的 AI 驱动开发流程。**此架构已于 2026-06-30 演进为 AI Agent 原生六层架构**（见阶段三）。
+
+<details>
+<summary>旧 Harness 架构图（点击展开，仅供参考）</summary>
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -51,6 +54,18 @@
 │  - 状态管理                                  │
 └─────────────────────────────────────────────┘
 ```
+
+</details>
+
+### 阶段三：AI Agent 原生六层架构（2026-06-30）
+
+从流程导向的 Harness 流水线，演进为**多维度并行治理**的 AI Agent 运行时架构：
+
+```
+规范层 · 上下文层 · 约束层 · 记忆层 · 工具层 · 工作流层
+```
+
+六个维度在 AI 的每一次行为中同时生效。架构总纲：`docs/specs/core/ai-agent-architecture.md`
 
 ## 二、文档结构
 
@@ -158,9 +173,10 @@ docs/ai-memory/global/
 - **更新进度**: 每完成一个功能后，更新 checkbox 状态
 - **新会话启动**: 按启动流程读取文档
 
-## 六、Harness 六层架构搭建指南
+## 六、AI Agent 六层架构搭建指南
 
-> **本章节供 AI 参考，用于在其他新项目中搭建 Harness 六层架构。**
+> **本章节供 AI 参考，用于在其他新项目中搭建 AI Agent 原生六层架构。**
+> 架构总纲参考：`docs/specs/core/ai-agent-architecture.md`（本项目的权威实现）
 
 ### 6.1 搭建步骤
 
@@ -213,54 +229,30 @@ mkdir -p docs/{requirements,specs/{core,detail,module},ai-memory/{global,module}
 ```
 项目根目录/
 ├── src/                    # 源代码
-├── docs/                   # 📚 项目文档 (Harness 架构)
+├── docs/                   # 📚 项目文档 (AI Agent 六层架构)
 │   ├── index.md            # 本文件 - 总索引
 │   ├── requirements/       # 需求文档
-│   ├── specs/              # 规范文档
-│   │   ├── core/           # 核心规范 (启动时必读)
-│   │   ├── detail/         # 详细规范
-│   │   └── module/         # 模块规范
-│   └── ai-memory/          # AI 记忆文档
+│   ├── specs/core/         # 规范层 + 约束层
+│   │   ├── ai-agent-architecture.md   # 架构总纲
+│   │   ├── coding-standards.md        # 编码规范
+│   │   ├── architecture.md            # 架构规范
+│   │   ├── constraint-layer.md        # 约束层定义
+│   │   └── hook-rules.md              # Hook 规则
+│   ├── specs/detail/       # 详细规范
+│   ├── specs/module/       # 模块规范
+│   └── ai-memory/          # 记忆层
 │       ├── global/         # 全局经验
 │       └── module/         # 模块经验
-└── CLAUDE.md               # AI 开发主入口
+└── CLAUDE.md               # AI Agent 运行时入口
 ```
 
-## Harness 六层架构
+## AI Agent 六层架构
 
 ```
-┌─────────────────────────────────────────────┐
-│  Layer 6: 验收层 (Acceptance)                │
-│  - 自动化测试                                │
-│  - 验收标准检查                              │
-│  - 状态更新                                  │
-├─────────────────────────────────────────────┤
-│  Layer 5: 审核层 (Review)                    │
-│  - 代码审核                                  │
-│  - 规范检查                                  │
-│  - 质量评估                                  │
-├─────────────────────────────────────────────┤
-│  Layer 4: 执行层 (Execution)                 │
-│  - 代码生成                                  │
-│  - 文件操作                                  │
-│  - 构建部署                                  │
-├─────────────────────────────────────────────┤
-│  Layer 3: 方案层 (Solution)                  │
-│  - 技术方案                                  │
-│  - 架构设计                                  │
-│  - 接口定义                                  │
-├─────────────────────────────────────────────┤
-│  Layer 2: 规范层 (Specification)             │
-│  - 编码规范                                  │
-│  - 架构规范                                  │
-│  - Hook 规则                                 │
-├─────────────────────────────────────────────┤
-│  Layer 1: 需求层 (Requirement)               │
-│  - 需求文档                                  │
-│  - 验收标准                                  │
-│  - 状态管理                                  │
-└─────────────────────────────────────────────┘
+规范层 · 上下文层 · 约束层 · 记忆层 · 工具层 · 工作流层
 ```
+
+> 六层并行生效，持续约束 AI 的每个行为。详见 `docs/specs/core/ai-agent-architecture.md`
 
 ---
 
@@ -450,11 +442,7 @@ Type: feat, fix, docs, style, refactor, perf, test, chore
 > **优先级**: P0 - 必须遵守
 > **最后更新**: YYYY-MM-DD
 
-## 1. Harness 六层架构
-
-展示六层架构图
-
-## 2. 状态管理规范
+## 1. 状态管理规范
 
 ### 核心原则
 1. 使用 Setup Store 模式
@@ -587,12 +575,12 @@ services/
 ```
 项目根目录/
 ├── src/                    # 源代码
-├── docs/                   # 📚 项目文档 (Harness 架构)
+├── docs/                   # 📚 项目文档 (AI Agent 六层架构)
 │   ├── index.md            # 总索引
 │   ├── requirements/       # 需求文档
-│   ├── specs/core/         # 核心规范
-│   └── ai-memory/global/   # 全局经验
-└── CLAUDE.md               # AI 开发主入口
+│   ├── specs/core/         # 规范层 + 约束层
+│   └── ai-memory/global/   # 记忆层
+└── CLAUDE.md               # AI Agent 运行时入口
 ```
 
 ## 技术栈
@@ -611,60 +599,28 @@ services/
 
 #### 第八步：更新 CLAUDE.md
 
-在 CLAUDE.md 中添加 Harness 六层架构说明：
+在 CLAUDE.md 中按 AI Agent 六层架构组织（参考本项目 CLAUDE.md）：
 
 ```markdown
-## Harness 六层架构
+# CLAUDE.md — AI Agent 运行时配置
 
-```
-┌─────────────────────────────────────────────┐
-│  Layer 6: 验收层 (Acceptance)                │
-│  - 自动化测试                                │
-│  - 验收标准检查                              │
-│  - 状态更新                                  │
-├─────────────────────────────────────────────┤
-│  Layer 5: 审核层 (Review)                    │
-│  - 代码审核                                  │
-│  - 规范检查                                  │
-│  - 质量评估                                  │
-├─────────────────────────────────────────────┤
-│  Layer 4: 执行层 (Execution)                 │
-│  - 代码生成                                  │
-│  - 文件操作                                  │
-│  - 构建部署                                  │
-├─────────────────────────────────────────────┤
-│  Layer 3: 方案层 (Solution)                  │
-│  - 技术方案                                  │
-│  - 架构设计                                  │
-│  - 接口定义                                  │
-├─────────────────────────────────────────────┤
-│  Layer 2: 规范层 (Specification)             │
-│  - 编码规范                                  │
-│  - 架构规范                                  │
-│  - Hook 规则                                 │
-├─────────────────────────────────────────────┤
-│  Layer 1: 需求层 (Requirement)               │
-│  - 需求文档                                  │
-│  - 验收标准                                  │
-│  - 状态管理                                  │
-└─────────────────────────────────────────────┘
-```
+## ━━━ 上下文层：现在在做什么 ━━━
+- 项目概述、技术栈、需求状态速览
 
-## 开发流程
+## ━━━ 约束层：绝对不能做的事 ━━━
+- 技术栈红线、代码红线、架构红线、安全红线、流程红线
 
-### 启动流程
+## ━━━ 规范层：代码质量标准 ━━━
+- 编码规范速查、架构规范速查
 
-新会话启动时，**必须**按顺序执行：
+## ━━━ 工具层：能力边界 ━━━
+- 可用工具清单、权限边界
 
-1. **读取总索引**: `docs/index.md`
-2. **读取需求索引**: `docs/requirements/index.md`
-3. **读取核心规范**: `docs/specs/core/`
+## ━━━ 记忆层：过去学到的 ━━━
+- 架构决策记录、技术债务、项目特有约定
 
-### 需求状态流转
-
-```
-pending → developing → done
-```
+## ━━━ 工作流层：按什么流程做 ━━━
+- 会话启动/开发/修复/审查/结束 5 条 SOP
 ```
 
 ### 6.2 搭建检查清单
@@ -679,14 +635,18 @@ pending → developing → done
 - [ ] `docs/specs/core/hook-rules.md` 存在且包含 Hook 规则
 - [ ] `docs/ai-memory/global/MEMORY.md` 存在且包含索引
 - [ ] `docs/ai-memory/global/01_project-overview.md` 存在且包含项目概况
-- [ ] `CLAUDE.md` 已更新，包含 Harness 六层架构说明
+- [ ] `docs/specs/core/ai-agent-architecture.md` 存在且包含六层架构总纲
+- [ ] `docs/specs/core/constraint-layer.md` 存在且包含硬性红线
+- [ ] `CLAUDE.md` 已按六层架构组织（上下文层/约束层/规范层/工具层/记忆层/工作流层）
 
 ### 6.3 使用流程
 
 **新会话启动**：
-1. 读取 `docs/index.md` 了解项目整体结构
-2. 读取 `docs/requirements/index.md` 了解当前需求状态
-3. 读取 `docs/specs/core/` 了解编码规范和架构规范
+1. 读取 `docs/index.md` 了解项目全貌
+2. 读取 `docs/requirements/index.md` 了解需求状态
+3. 读取 `docs/specs/core/constraint-layer.md` 加载硬性红线
+4. 读取 `docs/ai-memory/global/03_current-progress.md` 了解进度
+5. 读取 `docs/ai-memory/global/06_architecture-decisions.md` 回顾关键决策
 
 **开发新功能**：
 1. 复制 `docs/requirements/_template.md` 创建新需求文档

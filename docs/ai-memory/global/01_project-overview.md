@@ -13,7 +13,7 @@
 novel_project_by_claude/
 ├── frontend_project/       # 前端 — Vue 3 + Vite + Element Plus
 ├── backend_project/        # 后端 — Python FastAPI + SQLite
-├── docs/                   # 📚 项目文档 (Harness 架构)
+├── docs/                   # 📚 项目文档 (AI Agent 六层架构)
 │   ├── index.md            # 总索引
 │   ├── requirements/       # 需求文档
 │   ├── specs/              # 规范文档
@@ -55,4 +55,4 @@ main                    # 生产分支（只接受 merge，不直接 commit）
 
 **How to apply:** 新会话启动时，先读取本文件了解项目概况。
 
-**相关记忆**: [[02_ngrok-setup]] [[03_current-progress]] [[04_harness-architecture]]
+**相关记忆**: [[02_ngrok-setup]] [[03_current-progress]] [[06_architecture-decisions]]
